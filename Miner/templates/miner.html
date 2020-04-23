@@ -1,0 +1,37 @@
+<?php
+
+namespace Miner\classes;
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Miner</title>
+</head>
+<body>
+	<?php
+		foreach (MinerController::getMessages() as $n => $value){
+			print $value.'<br>';
+		}
+	?>
+	<br><br>
+	<?php
+		foreach (MinerController::getField() as $h => $row){
+			foreach ($row as $w => $cell){
+				print $cell;
+			}
+			print '<br>';
+		}
+	?>
+	<br><br>
+	<form action="/" method="POST">
+		Ширина <input type="text" name="width" value="10"><br>
+		Высота<input type="text" name="height" value="10"><br>
+		Кол-во бомб<input type="text" name="numberbombs" value="10"><br>
+		<button name="newGame">NewGame</button>
+		<button name="loadGame">LoadGame</button>
+	</form>
+</body>
+</html>
