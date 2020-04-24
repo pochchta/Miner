@@ -11,7 +11,7 @@ class MinerController
 	const MAX_HEIGHT = 16;
 	const MAX_NUMBER_BOMBS = 100;	
 	private static $ctrl = NULL;
-	private static $miner = NULL;
+	private $miner = NULL;
 	private $width = 10;
 	private $height = 10;
 	private $numberBombs = 10;
@@ -52,9 +52,16 @@ class MinerController
 			$n <= self::MAX_NUMBER_BOMBS &&
 			$n <= $w * $h
 		) {
-			self::$ctrl->width = $w;
-			self::$ctrl->height = $h;
-			self::$ctrl->numberBombs = $n;
+			if (
+				self::$ctrl->width != $w ||
+				self::$ctrl->height != $h ||
+				self::$ctrl->numberBombs != $n
+			) {
+				self::$ctrl->width = $w;
+				self::$ctrl->height = $h;
+				self::$ctrl->numberBombs = $n;
+				self::newMiner();
+			}
 		}
 	}
 	public static function getSettings()
@@ -67,23 +74,23 @@ class MinerController
 	}
 	private static function getMiner()
 	{
-		if (self::$miner == NULL) {
+		if (self::$ctrl->miner == NULL) {
 			self::newMiner();
 		}
-		return self::$miner;
+		return self::$ctrl->miner;
 	}
 	// private static function setMiner(Miner $miner)
 	// {
-	// 	self::$miner = $miner;
+	// 	self::$ctrl->miner = $miner;
 	// }	
 	public static function newMiner()
 	{
-		self::$miner = new Miner(self::$ctrl->width, self::$ctrl->height, self::$ctrl->numberBombs);
+		self::$ctrl->miner = new Miner(self::$ctrl->width, self::$ctrl->height, self::$ctrl->numberBombs);
 	}
 	public static function isBomb()
 	{
 			return "I'm function isBomb!";
-			// return self::$miner->isBomb();
+			// return self::$ctrl->miner->isBomb();
 	}
 	public static function getField()
 	{
