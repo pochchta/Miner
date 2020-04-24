@@ -27,11 +27,19 @@ namespace Miner\classes;
 	?>
 	<br><br>
 	<form action="/" method="POST">
-		Ширина <input type="text" name="width" value="10"><br>
-		Высота<input type="text" name="height" value="10"><br>
-		Кол-во бомб<input type="text" name="numberbombs" value="10"><br>
+		<?php
+			$names = array(
+				"width" => "Ширина",
+				"height" => "Высота",
+				"numberBombs" => "Кол-во бомб"
+			);
+			foreach (MinerController::getSettings() as $key => $value) {
+				print "{$names[$key]} <input type='text' name='{$key}' value='{$value}'><br>";
+			}
+		?>
 		<button name="newGame">NewGame</button>
 		<button name="loadGame">LoadGame</button>
+		<button name="setSettings">SetSettings</button>
 	</form>
 </body>
 </html>
