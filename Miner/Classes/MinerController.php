@@ -7,53 +7,78 @@ class MinerController
 	const MIN_WIDTH = 1;
 	const MIN_HEIGHT = 1;
 	const MIN_NUMBER_BOMBS = 0;
+	const MAX_WIDTH = 30;
+	const MAX_HEIGHT = 16;
+	const MAX_NUMBER_BOMBS = 100;	
+	private static $ctrl = NULL;
 	private static $miner = NULL;
-	private static $width = 10;
-	private static $height = 10;
-	private static $numberBombs = 10;
-	private static function getInstance()
+	private $width = 10;
+	private $height = 10;
+	private $numberBombs = 10;
+	private function __construct()
 	{
-		if (isset(self::$miner) == false) {
-			self::loadGame();
+	}
+	private static function getCtrl()
+	{
+		if (self::$ctrl == NULL) {
+			self::loadFromSession();
+		}
+		return self::$ctrl;
+	}
+	public static function loadFromSession()
+	{
+		if (isset($_SESSION['minerCtrl'])) {
+			self::$ctrl = $_SESSION['minerCtrl'];
+		} else {
+			self::$ctrl = new self();
+			$_SESSION['minerCtrl'] = self::$ctrl;
+		}
+	}
+	// public static function saveToSession()
+	// {
+	// 	$_SESSION['minerCtrl'] = self::getCtrl();
+	// }
+	public static function setSettings(array $settings)
+	{
+		$w = (int)$settings['width'];
+		$h = (int)$settings['height'];
+		$n = (int)$settings['numberBombs'];
+		if (
+			$w >= self::MIN_WIDTH &&
+			$w <= self::MAX_WIDTH &&
+			$h >= self::MIN_HEIGHT &&
+			$h <= self::MAX_HEIGHT &&
+			$n >= self::MIN_NUMBER_BOMBS &&
+			$n <= self::MAX_NUMBER_BOMBS &&
+			$n <= $w * $h
+		) {
+			self::$ctrl->width = $w;
+			self::$ctrl->height = $h;
+			self::$ctrl->numberBombs = $n;
+		}
+	}
+	public static function getSettings()
+	{
+		return array(
+			"width" => self::$ctrl->width,
+			"height" => self::$ctrl->height,
+			"numberBombs" => self::$ctrl->numberBombs
+		);
+	}
+	private static function getMiner()
+	{
+		if (self::$miner == NULL) {
+			self::newMiner();
 		}
 		return self::$miner;
 	}
-	private static function setInstance(Miner $miner)
+	// private static function setMiner(Miner $miner)
+	// {
+	// 	self::$miner = $miner;
+	// }	
+	public static function newMiner()
 	{
-		self::$miner = $miner;
-	}	
-	public static function newGame()
-	{
-		self::$miner = new Miner(self::$width, self::$height, self::$numberBombs);
-	}
-	public static function loadGame()
-	{
-		if (isset($_SESSION['miner'])) {
-			self::$miner = $_SESSION['miner'];
-		} else {
-			self::newGame();
-		}
-	}
-	public static function saveGame()
-	{
-		$_SESSION['miner'] = self::getInstance($miner);
-	}
-	public static function setSettings(array $settings)
-	{
-		if ((int)$settings['width'] >= self::MIN_WIDTH) {
-			self::$width = (int)$settings['width'];
-		}
-		if ((int)$settings['height'] >= self::MIN_HEIGHT) {
-			self::$height = (int)$settings['height'];
-		}
-		$maxNumberBombs = (self::$width)*(self::$height);
-		if ((int)$settings['numberBombs'] >= self::MIN_NUMBER_BOMBS && (int)$settings['numberBombs'] <= $maxNumberBombs) {
-			self::$numberBombs = (int)$settings['numberBombs'];
-		} elseif (self::MIN_NUMBER_BOMBS < $maxNumberBombs) {
-			self::$numberBombs = self::MIN_NUMBER_BOMBS;
-		} else {
-			self::$numberBombs = $maxNumberBombs;
-		}
+		self::$miner = new Miner(self::$ctrl->width, self::$ctrl->height, self::$ctrl->numberBombs);
 	}
 	public static function isBomb()
 	{
@@ -62,14 +87,14 @@ class MinerController
 	}
 	public static function getField()
 	{
-		return self::getInstance()->getField();
+		return self::getMiner()->getField();
 	}
 	public static function getMessages()
 	{
-		return self::getInstance()->getMessages();
+		return self::getMiner()->getMessages();
 	}
 	public static function clearMessages()
 	{
-		self::getInstance()->clearMessages();
+		self::getMiner()->clearMessages();
 	}
 }
