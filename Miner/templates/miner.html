@@ -9,25 +9,22 @@ namespace Miner\classes;
 <head>
 	<meta charset="UTF-8">
 	<title>Miner</title>
+    <link href="Miner/css/style.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
+	<div class="messages">
 	<?php
 		foreach (MinerController::getMessages() as $n => $value){
 			print $value.'<br>';
 		}
 	?>
+	</div>
 	<br><br>
-	<?php
-		print "<pre>";
-		foreach (MinerController::getField() as $h => $row){
-			foreach ($row as $w => $cell){
-				print '['.$cell.']';
-			}
-			print '<br>';
-		}
-		print "</pre>";
-	?>
+	<?php MinerWriter::printField(MinerController::getField(), MinerController::getMiner()->isEndGame()); ?>
 	<br><br>
+	<form action="/" method="POST" id="formClickField">
+		<input type="hidden" name="coord">
+	</form>
 	<form action="/" method="POST">
 		<?php
 			$names = array(
@@ -43,5 +40,16 @@ namespace Miner\classes;
 		<button name="loadGame">LoadGame</button>
 		<button name="setSettings">SetSettings</button>
 	</form>
+	<script>
+		var elements = document.querySelectorAll(".cell");
+		for (var i = 0; i < elements.length; i++) {
+			elements[i].onclick = function(){
+				document.forms["formClickField"].coord.value = this.id;
+				document.forms["formClickField"].submit();
+
+			};
+		}
+	</script>
+
 </body>
 </html>
