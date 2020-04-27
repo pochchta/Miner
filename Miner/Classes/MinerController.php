@@ -40,6 +40,7 @@ class MinerController
 	// }
 	public static function setSettings(array $settings)
 	{
+		$ctrl = self::getCtrl();
 		$w = (int)$settings['width'];
 		$h = (int)$settings['height'];
 		$n = (int)$settings['numberBombs'];
@@ -53,44 +54,56 @@ class MinerController
 			$n <= $w * $h
 		) {
 			if (
-				self::$ctrl->width != $w ||
-				self::$ctrl->height != $h ||
-				self::$ctrl->numberBombs != $n
+				$ctrl->width != $w ||
+				$ctrl->height != $h ||
+				$ctrl->numberBombs != $n
 			) {
-				self::$ctrl->width = $w;
-				self::$ctrl->height = $h;
-				self::$ctrl->numberBombs = $n;
+				$ctrl->width = $w;
+				$ctrl->height = $h;
+				$ctrl->numberBombs = $n;
 				self::newMiner();
 			}
 		}
 	}
 	public static function getSettings()
 	{
+		$ctrl = self::getCtrl();
 		return array(
-			"width" => self::$ctrl->width,
-			"height" => self::$ctrl->height,
-			"numberBombs" => self::$ctrl->numberBombs
+			"width" => $ctrl->width,
+			"height" => $ctrl->height,
+			"numberBombs" => $ctrl->numberBombs
 		);
 	}
 	private static function getMiner()
 	{
-		if (self::$ctrl->miner == NULL) {
+		$ctrl = self::getCtrl();
+		if ($ctrl->miner == NULL) {
 			self::newMiner();
 		}
-		return self::$ctrl->miner;
+		return $ctrl->miner;
 	}
 	// private static function setMiner(Miner $miner)
 	// {
-	// 	self::$ctrl->miner = $miner;
+	// 	$ctrl = self::getCtrl();
+	// 	$ctrl->miner = $miner;
 	// }	
 	public static function newMiner()
 	{
-		self::$ctrl->miner = new Miner(self::$ctrl->width, self::$ctrl->height, self::$ctrl->numberBombs);
+		$ctrl = self::getCtrl();
+		$ctrl->miner = new Miner($ctrl->width, $ctrl->height, $ctrl->numberBombs);
 	}
-	public static function isBomb()
+	public static function isBomb($coord)
 	{
-			return "I'm function isBomb!";
-			// return self::$ctrl->miner->isBomb();
+		$ctrl = self::getCtrl();
+		if (
+			(int)$coord['w'] >= 0 &&
+			(int)$coord['w'] < $ctrl->width &&
+			(int)$coord['h'] >= 0 &&
+			(int)$coord['h'] < $ctrl->height
+		) {
+			return $ctrl->miner->isBomb((int)$coord['w'], (int)$coord['h']);
+		}
+		return false;
 	}
 	public static function getField()
 	{
