@@ -5,8 +5,12 @@ namespace Miner\classes;
 class BombCell extends Cell
 {
 	const SYMBOL = 'o';
+	public $exploded = false;
 	public function __toString()
 	{
-		return self::SYMBOL;
-	}	
+		if ($this->visible){
+			return self::SYMBOL;
+		}
+		return '';
+	}
 }
