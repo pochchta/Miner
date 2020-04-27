@@ -74,7 +74,7 @@ class MinerController
 			"numberBombs" => $ctrl->numberBombs
 		);
 	}
-	private static function getMiner()
+	public static function getMiner()
 	{
 		$ctrl = self::getCtrl();
 		if ($ctrl->miner == NULL) {
@@ -82,26 +82,27 @@ class MinerController
 		}
 		return $ctrl->miner;
 	}
-	// private static function setMiner(Miner $miner)
-	// {
-	// 	$ctrl = self::getCtrl();
-	// 	$ctrl->miner = $miner;
-	// }	
 	public static function newMiner()
 	{
 		$ctrl = self::getCtrl();
-		$ctrl->miner = new Miner($ctrl->width, $ctrl->height, $ctrl->numberBombs);
+		$ctrl->miner = new Miner($ctrl->height, $ctrl->width, $ctrl->numberBombs);
 	}
 	public static function isBomb($coord)
 	{
 		$ctrl = self::getCtrl();
-		if (
-			(int)$coord['w'] >= 0 &&
-			(int)$coord['w'] < $ctrl->width &&
-			(int)$coord['h'] >= 0 &&
-			(int)$coord['h'] < $ctrl->height
-		) {
-			return $ctrl->miner->isBomb((int)$coord['w'], (int)$coord['h']);
+		if (is_string($coord)) {
+			$coord = explode('_', $coord);
+			$w = (int)$coord[2];
+			$h = (int)$coord[1];
+			if (
+				$w >= 0 &&
+				$w < $ctrl->width &&
+				$h >= 0 &&
+				$h < $ctrl->height
+			) {
+				$miner = $ctrl->getMiner();
+				return $miner->isBomb((int)$h, (int)$w);
+			}
 		}
 		return false;
 	}

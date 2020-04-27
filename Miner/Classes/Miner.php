@@ -6,7 +6,8 @@ class Miner
 {
 	private $field = array(array());
 	private $messages = array();
-	public function __construct($width, $height, $numberBombs)
+	private $endGame = false;
+	public function __construct($height, $width, $numberBombs)
 	{
 		for ($h = 0; $h < $height; $h++){
 			for ($w = 0; $w < $width; $w++){
@@ -41,9 +42,16 @@ class Miner
 			}
 		}
 	}
-	public function isBomb($w, $h)
-	{
-		if ($field[$h][$w] instanceof BombCell) {
+	public function isBomb($h, $w)
+	{		
+		$cell = $this->field[$h][$w];
+		if ($cell instanceof Cell) {
+			$cell->visible = true;
+		}
+		if ($cell instanceof BombCell) {
+			$cell->exploded = true;
+			$this->endGame = true;
+			$this->messages[] = 'Вы проиграли';
 			return true;
 		}
 		return false;
@@ -60,5 +68,9 @@ class Miner
 	public function getField()
 	{
 		return $this->field;
+	}
+	public function isEndGame()
+	{
+		return $this->endGame;
 	}
 }

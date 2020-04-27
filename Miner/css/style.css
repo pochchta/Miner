@@ -1,0 +1,30 @@
+.messages{
+	height: 100px;
+	background-color: #F9FFF6;
+	padding: 10px;
+}
+
+.row{
+	overflow: hidden;
+}
+.cell{
+	float: left;
+	width: 30px;
+	height: 30px;
+	border: 1px solid black;
+}
+.cell.notVisible{
+	background-color: #F8F8F8;
+}
+.cell.numberBombs{
+	background-color: #ADADE9;
+}
+.cell.notBomb{
+	background-color: #D9D9F1;
+}
+.cell.bomb{
+	background-color: #CEA8A8;
+}
+.cell.explodedBomb{
+	background-color: red;
+}
