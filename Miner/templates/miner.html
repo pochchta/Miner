@@ -20,7 +20,7 @@ namespace Miner\classes;
 	?>
 	</div>
 	<br><br>
-	<?php MinerWriter::printField(MinerController::getField(), MinerController::getMiner()->isEndGame()); ?>
+	<?php MinerWriter::printField(MinerController::getMiner()); ?>
 	<br><br>
 	<form action="/" method="POST" id="formClickField">
 		<input type="hidden" name="coord">

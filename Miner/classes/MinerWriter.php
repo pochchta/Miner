@@ -4,15 +4,16 @@ namespace Miner\classes;
 
 class MinerWriter
 {
-	public static function printField($field, $endGame = false)
+	public static function printField(Miner $miner)
 	{
+
 		print '<div class=field>';
-		foreach ($field as $h => $row) {
+		foreach ($miner->getField() as $h => $row) {
 			print '<div class=row>';
 			foreach ($row as $w => $cell) {
 				$class = 'cell ';
 				if ($cell instanceof Cell) {
-					if ($cell->visible == false && $endGame == false) {
+					if ($cell->visible == false && $miner->isEndGame() == false) {
 						$class .= 'notVisible';
 					} elseif ($cell instanceof BombCell) {
 						if ($cell->exploded) {
