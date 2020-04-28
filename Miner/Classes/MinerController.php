@@ -51,7 +51,7 @@ class MinerController
 			$h <= self::MAX_HEIGHT &&
 			$n >= self::MIN_NUMBER_BOMBS &&
 			$n <= self::MAX_NUMBER_BOMBS &&
-			$n <= $w * $h
+			$n < $w * $h
 		) {
 			if (
 				$ctrl->width != $w ||
@@ -101,7 +101,7 @@ class MinerController
 				$h < $ctrl->height
 			) {
 				$miner = $ctrl->getMiner();
-				return $miner->isBomb((int)$h, (int)$w);
+				$miner->isBomb((int)$h, (int)$w);
 			}
 		}
 		return false;
