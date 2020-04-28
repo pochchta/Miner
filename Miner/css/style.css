@@ -2,6 +2,7 @@
 	height: 100px;
 	background-color: #F9FFF6;
 	padding: 10px;
+	overflow: hidden;
 }
 
 .row{
@@ -12,19 +13,26 @@
 	width: 30px;
 	height: 30px;
 	border: 1px solid black;
+	text-align: center;
+	/* font-weight: 700; */
+	font-size: 20px;
 }
 .cell.notVisible{
-	background-color: #F8F8F8;
+	background-color: #D9D9F1;
+	/*background-color: #F8F8F8;*/
 }
 .cell.numberBombs{
 	background-color: #ADADE9;
 }
 .cell.notBomb{
-	background-color: #D9D9F1;
+	background-color: #F8F8F8;
+	/*background-color: #D9D9F1;*/
 }
 .cell.bomb{
-	background-color: #CEA8A8;
+	background-image: url(../images/bomb128.gif);
+	background-size: cover;
 }
 .cell.explodedBomb{
-	background-color: red;
+	background-image: url(../images/bombExploded128.gif);
+	background-size: cover;
 }
