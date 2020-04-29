@@ -86,31 +86,20 @@ class Miner
 	}
 	private function openBesideCell($h, $w)
 	{
-		$paths = array(
-			array('h' => -1, 'w' => 0),
-			array('h' => 1, 'w' => 0),
-			array('h' => 0, 'w' => -1),
-			array('h' => 0, 'w' => 1),
-		);
-		foreach ($paths as $path) {
-			$hNew = $h + $path['h'];
-			$wNew = $w + $path['w'];
-			if (
-				$wNew < 0 || 
-				$hNew < 0 || 
-				$wNew >= $this->width || 
-				$hNew >= $this->height
-			) {
-				continue;
-			}
-			if (
-				$this->field[$hNew][$wNew] instanceof EmptyCell &&
-				$this->field[$hNew][$wNew]->visible == false
-			) {
-				$this->field[$hNew][$wNew]->visible = true;
-				$this->countEmptyCell--;
-				if ($this->field[$hNew][$wNew]->countBombAround == 0) {
-					$this->openBesideCell($hNew, $wNew);
+		foreach (range(-1, 1) as $hScan) {
+			foreach (range(-1, 1) as $wScan) {
+				$hNew = $h + $hScan;
+				$wNew = $w + $wScan;
+				if (
+					isset($this->field[$hNew][$wNew]) &&
+					$this->field[$hNew][$wNew] instanceof EmptyCell &&
+					$this->field[$hNew][$wNew]->visible == false
+				) {
+					$this->field[$hNew][$wNew]->visible = true;
+					$this->countEmptyCell--;
+					if ($this->field[$hNew][$wNew]->countBombAround == 0) {
+						$this->openBesideCell($hNew, $wNew);
+					}
 				}
 			}
 		}
