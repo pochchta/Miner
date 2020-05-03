@@ -1,11 +1,12 @@
 <?php
 
-namespace Miner\classes;
+namespace miner\classes;
 
 $autoload = function ($path) {
 	if (preg_match('/\\\\/', $path)) {
 		$path = str_replace('\\', DIRECTORY_SEPARATOR, $path);
 	}
+	$path = __DIR__.DIRECTORY_SEPARATOR.$path;
 	if (file_exists("{$path}.php")) {
 		require_once("{$path}.php");
 	} 
@@ -21,7 +22,7 @@ if (isset($_POST['setSettings'])) {
 } elseif (isset($_POST['coord'])) {
 	MinerController::isBomb($_POST['coord']);
 }
-include('Miner/templates/miner.html');
+include(__DIR__.'/miner/templates/miner.html');
 MinerController::clearMessages();
 
 

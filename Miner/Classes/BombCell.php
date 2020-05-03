@@ -1,6 +1,6 @@
 <?php
 
-namespace Miner\classes;
+namespace miner\classes;
 
 class BombCell extends Cell
 {

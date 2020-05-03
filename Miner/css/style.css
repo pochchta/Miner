@@ -20,7 +20,7 @@
 }
 .cell.notVisible{
 	background-color: #D9D9F1;
-	background-image: url(../images/notVisible128.gif);
+	background-image: url(/miner/images/notVisible128.gif);
 }
 .cell.numberBombs{
 	background-color: #ADADE9;
@@ -30,8 +30,8 @@
 }
 .cell.bomb{
 	background-color: #E38D8D;
-	background-image: url(../images/bombTransp128.gif);
+	background-image: url(/miner/images/bombTransp128.gif);
 }
 .cell.explodedBomb{
-	background-image: url(../images/bombExploded128.gif);
+	background-image: url(/miner/images/bombExploded128.gif);
 }
