@@ -17,8 +17,7 @@ function showImageCell(elements)
 		if (cellView == null || cellView == DEFAULT) {
 			item.style = "";
 		} else if (cellView == FLAG) {
-			item.style = "background-image: url('/miner/images/flagTransp128.gif'),";
-			item.style .= " url('/miner/images/notVisible128.gif')";
+			item.style = "background-image: url('/miner/images/flagTransp128.gif'), url('/miner/images/notVisible128.gif')";
 		}
 	}
 }
@@ -50,12 +49,31 @@ function clearImageField()
 }
 function saveSettings()
 {
-	let arr = new Map([
-		['width', document.forms["formSettings"].width.value],
-		['height', document.forms["formSettings"].height.value],
-		['numberBombs', document.forms["formSettings"].numberBombs.value]
-	]);
-
-	localStorage.setItem(array, JSON.stringify(arr));
-	// array = JSON.parse(localStorage.getItem("array"));
+	let settings = {
+		width: document.forms["formSettings"].width.value,
+		height: document.forms["formSettings"].height.value,
+		numberBombs: document.forms["formSettings"].numberBombs.value
+	}
+	if (
+		settings.width !== "" &&
+		settings.height !== "" &&
+		settings.numberBombs !== ""
+	) {	
+		localStorage.setItem("settings", JSON.stringify(settings));
+	}
+}
+function loadSettings()
+{
+	settings = JSON.parse(localStorage.getItem("settings"));
+	if (
+		settings !== null &&
+		settings.hasOwnProperty("width") &&
+		settings.hasOwnProperty("height") &&
+		settings.hasOwnProperty("numberBombs")
+	) {
+		document.forms["formSettings"].width.value = settings.width;
+		document.forms["formSettings"].height.value = settings.height;
+		document.forms["formSettings"].numberBombs.value = settings.numberBombs;
+		return settings;
+	}
 }
