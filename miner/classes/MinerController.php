@@ -2,7 +2,7 @@
 
 namespace miner\classes;
 
-class MinerController
+abstract class MinerController
 {
 	const MIN_WIDTH = 1;
 	const MIN_HEIGHT = 1;
@@ -10,35 +10,30 @@ class MinerController
 	const MAX_WIDTH = 30;
 	const MAX_HEIGHT = 16;
 	const MAX_NUMBER_BOMBS = 100;
-	const COOKIE_NAME = "settings";
+	const SESSION_NAME = 'minerSession';
+	const COOKIE_NAME = 'settings';
 	const COOKIE_TIME = 60 * 60 * 24 * 30;	// month
-	private static $ctrl = NULL;
-	private $miner = NULL;
-	private $width = 10;
-	private $height = 10;
-	private $numberBombs = 10;
-	private function __construct()
+	private static $miner = NULL;
+	private static $width = 10;
+	private static $height = 10;
+	private static $numberBombs = 10;
+	public static function loadMinerFromSession()
 	{
-	}
-	private static function getCtrl()
-	{
-		if (self::$ctrl == NULL) {
-			self::loadFromSession();
-		}
-		return self::$ctrl;
-	}
-	public static function loadFromSession()
-	{
-		if (isset($_SESSION['minerCtrl'])) {
-			self::$ctrl = $_SESSION['minerCtrl'];
+		if (isset($_SESSION[self::SESSION_NAME])) {
+			self::$miner = $_SESSION[self::SESSION_NAME];
+			$settings = self::$miner->getSettings();
+			self::saveSettings($settings);
 		} else {
-			self::$ctrl = new self();
-			$_SESSION['minerCtrl'] = self::$ctrl;
+			MinerController::loadSettingsFromCookie();
+			self::$miner = self::getMiner();
 		}
 	}
-	public static function filterSettings(array $settings)
+	public static function saveMinerToSession()
 	{
-		$ctrl = self::getCtrl();
+		$_SESSION[self::SESSION_NAME] = self::$miner;
+	}
+	private static function filterSettings(array $settings)
+	{
 		$w = (int)$settings['width'];
 		$h = (int)$settings['height'];
 		$n = (int)$settings['numberBombs'];
@@ -55,98 +50,92 @@ class MinerController
 		}		
 		return false;
 	}
-	public static function changedSettings(array $settings)
+	private static function changedSettings(array $settings)
 	{
-		$ctrl = self::getCtrl();
 		$w = (int)$settings['width'];
 		$h = (int)$settings['height'];
 		$n = (int)$settings['numberBombs'];
 		if (
-			$ctrl->width != $w ||
-			$ctrl->height != $h ||
-			$ctrl->numberBombs != $n
+			self::$width != $w ||
+			self::$height != $h ||
+			self::$numberBombs != $n
 		) {
 			return true;
 		}
 		return false;
 	}
-	public static function saveSettings(array $settings)
+	private static function saveSettings(array $settings)
 	{
-		$ctrl = self::getCtrl();
 		$w = (int)$settings['width'];
 		$h = (int)$settings['height'];
 		$n = (int)$settings['numberBombs'];
-		$ctrl->width = $w;
-		$ctrl->height = $h;
-		$ctrl->numberBombs = $n;
+		self::$width = $w;
+		self::$height = $h;
+		self::$numberBombs = $n;
 	}
 	public static function setSettings(array $settings)
 	{
 		if (self::filterSettings($settings)) {
 			if (self::changedSettings($settings)) {
-				self::saveSettings();
-				self::setCookie();
+				self::saveSettings($settings);
+				self::setSettingsToCookie();
 				self::newMiner();
 			}
 		}
 	}
 	public static function getSettings()
 	{
-		$ctrl = self::getCtrl();
 		return array(
-			"width" => $ctrl->width,
-			"height" => $ctrl->height,
-			"numberBombs" => $ctrl->numberBombs
+			"width" => self::$width,
+			"height" => self::$height,
+			"numberBombs" => self::$numberBombs
 		);
 	}
-	private static function setCookie()
+	public static function setSettingsToCookie()
 	{
-		$ctrl = self::getCtrl();
 		$settings = serialize([
-			'width' => $ctrl->width,
-			'height' => $ctrl->height,
-			'numberBombs' => $ctrl->numberBombs
+			'width' => self::$width,
+			'height' => self::$height,
+			'numberBombs' => self::$numberBombs
 		]);
 		setcookie(self::COOKIE_NAME, $settings, time()+self::COOKIE_TIME);
 	}
-	private static function getCookie()
+	public static function loadSettingsFromCookie()
 	{
 		$value = $_COOKIE[self::COOKIE_NAME];
 		$settings = unserialize($value);
-		if (self::filterSettings($settings)) {
-			if (self::changedSettings($settings)) {
-				self::saveSettings();
-				self::newMiner();
-			}
+		if (is_array($settings)) {
+			if (self::filterSettings($settings)) {
+				if (self::changedSettings($settings)) {
+					self::saveSettings($settings);
+				}
+			}		
 		}
 	}
 	public static function getMiner()
 	{
-		$ctrl = self::getCtrl();
-		if ($ctrl->miner == NULL) {
+		if (self::$miner == NULL) {
 			self::newMiner();
 		}
-		return $ctrl->miner;
+		return self::$miner;
 	}
 	public static function newMiner()
 	{
-		$ctrl = self::getCtrl();
-		$ctrl->miner = new Miner($ctrl->height, $ctrl->width, $ctrl->numberBombs);
-	}
+		self::$miner = new Miner(self::$height, self::$width, self::$numberBombs);
+	}	
 	public static function isBomb($coord)
 	{
-		$ctrl = self::getCtrl();
 		if (is_string($coord)) {
 			$coord = explode('_', $coord);
 			$w = (int)$coord[2];
 			$h = (int)$coord[1];
 			if (
 				$w >= 0 &&
-				$w < $ctrl->width &&
+				$w < self::$width &&
 				$h >= 0 &&
-				$h < $ctrl->height
+				$h < self::$height
 			) {
-				$miner = $ctrl->getMiner();
+				$miner = self::getMiner();
 				$miner->isBomb((int)$h, (int)$w);
 			}
 		}
