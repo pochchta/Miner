@@ -121,4 +121,12 @@ class Miner
 	{
 		return $this->endGame;
 	}
+	public function getSettings()
+	{
+		return array(
+			'width' => $this->width,
+			'height' => $this->height,
+			'numberBombs' => $this->numberBombs
+		);
+	}
 }
