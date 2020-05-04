@@ -9,7 +9,9 @@ class MinerController
 	const MIN_NUMBER_BOMBS = 0;
 	const MAX_WIDTH = 30;
 	const MAX_HEIGHT = 16;
-	const MAX_NUMBER_BOMBS = 100;	
+	const MAX_NUMBER_BOMBS = 100;
+	const COOKIE_NAME = "settings";
+	const COOKIE_TIME = 60 * 60 * 24 * 30;	// month
 	private static $ctrl = NULL;
 	private $miner = NULL;
 	private $width = 10;
@@ -34,11 +36,7 @@ class MinerController
 			$_SESSION['minerCtrl'] = self::$ctrl;
 		}
 	}
-	// public static function saveToSession()
-	// {
-	// 	$_SESSION['minerCtrl'] = self::getCtrl();
-	// }
-	public static function setSettings(array $settings)
+	public static function filterSettings(array $settings)
 	{
 		$ctrl = self::getCtrl();
 		$w = (int)$settings['width'];
@@ -53,14 +51,41 @@ class MinerController
 			$n <= self::MAX_NUMBER_BOMBS &&
 			$n < $w * $h
 		) {
-			if (
-				$ctrl->width != $w ||
-				$ctrl->height != $h ||
-				$ctrl->numberBombs != $n
-			) {
-				$ctrl->width = $w;
-				$ctrl->height = $h;
-				$ctrl->numberBombs = $n;
+			return true;
+		}		
+		return false;
+	}
+	public static function changedSettings(array $settings)
+	{
+		$ctrl = self::getCtrl();
+		$w = (int)$settings['width'];
+		$h = (int)$settings['height'];
+		$n = (int)$settings['numberBombs'];
+		if (
+			$ctrl->width != $w ||
+			$ctrl->height != $h ||
+			$ctrl->numberBombs != $n
+		) {
+			return true;
+		}
+		return false;
+	}
+	public static function saveSettings(array $settings)
+	{
+		$ctrl = self::getCtrl();
+		$w = (int)$settings['width'];
+		$h = (int)$settings['height'];
+		$n = (int)$settings['numberBombs'];
+		$ctrl->width = $w;
+		$ctrl->height = $h;
+		$ctrl->numberBombs = $n;
+	}
+	public static function setSettings(array $settings)
+	{
+		if (self::filterSettings($settings)) {
+			if (self::changedSettings($settings)) {
+				self::saveSettings();
+				self::setCookie();
 				self::newMiner();
 			}
 		}
@@ -73,6 +98,27 @@ class MinerController
 			"height" => $ctrl->height,
 			"numberBombs" => $ctrl->numberBombs
 		);
+	}
+	private static function setCookie()
+	{
+		$ctrl = self::getCtrl();
+		$settings = serialize([
+			'width' => $ctrl->width,
+			'height' => $ctrl->height,
+			'numberBombs' => $ctrl->numberBombs
+		]);
+		setcookie(self::COOKIE_NAME, $settings, time()+self::COOKIE_TIME);
+	}
+	private static function getCookie()
+	{
+		$value = $_COOKIE[self::COOKIE_NAME];
+		$settings = unserialize($value);
+		if (self::filterSettings($settings)) {
+			if (self::changedSettings($settings)) {
+				self::saveSettings();
+				self::newMiner();
+			}
+		}
 	}
 	public static function getMiner()
 	{
