@@ -4,19 +4,12 @@ namespace miner\classes;
 
 class MinerController
 {
-	const MIN_WIDTH = 1;
-	const MIN_HEIGHT = 1;
-	const MIN_NUMBER_BOMBS = 0;
-	const MAX_WIDTH = 30;
-	const MAX_HEIGHT = 16;
-	const MAX_NUMBER_BOMBS = 100;
 	const SESSION_NAME = 'minerSession';
 	const COOKIE_NAME = 'settings';
 	const COOKIE_TIME = 2592000;	// 60 * 60 * 24 * 30 = month
-	private static $miner = NULL;
-	private static $width = 10;
-	private static $height = 10;
-	private static $numberBombs = 10;
+	private static $miner;
+	private static $settings;
+	private static $messages = array();
 	private function __construct()
 	{
 	}
@@ -24,10 +17,14 @@ class MinerController
 	{
 		if (isset($_SESSION[self::SESSION_NAME])) {
 			self::$miner = $_SESSION[self::SESSION_NAME];
-			$settings = self::$miner->getSettings();
-			self::saveSettings($settings);
+			if (self::$miner instanceof Miner) {
+				try {
+					self::getSettings()->setSettings(self::$miner->getSettings());
+				} catch (\Exception $e) {
+					self::$messages[] = 'Session ошибка настроек: '.$e->getMessage();
+				}
+			}
 		} else {
-			MinerController::loadSettingsFromCookie();
 			self::$miner = self::getMiner();
 		}
 	}
@@ -35,84 +32,40 @@ class MinerController
 	{
 		$_SESSION[self::SESSION_NAME] = self::$miner;
 	}
-	private static function filterSettings(array $settings)
+	public static function setSettings(array $arraySettings)
 	{
-		$w = (int)$settings['width'];
-		$h = (int)$settings['height'];
-		$n = (int)$settings['numberBombs'];
-		if (
-			$w >= self::MIN_WIDTH &&
-			$w <= self::MAX_WIDTH &&
-			$h >= self::MIN_HEIGHT &&
-			$h <= self::MAX_HEIGHT &&
-			$n >= self::MIN_NUMBER_BOMBS &&
-			$n <= self::MAX_NUMBER_BOMBS &&
-			$n < $w * $h
-		) {
-			return true;
-		}		
-		return false;
-	}
-	private static function changedSettings(array $settings)
-	{
-		$w = (int)$settings['width'];
-		$h = (int)$settings['height'];
-		$n = (int)$settings['numberBombs'];
-		if (
-			self::$width != $w ||
-			self::$height != $h ||
-			self::$numberBombs != $n
-		) {
-			return true;
-		}
-		return false;
-	}
-	private static function saveSettings(array $settings)
-	{
-		$w = (int)$settings['width'];
-		$h = (int)$settings['height'];
-		$n = (int)$settings['numberBombs'];
-		self::$width = $w;
-		self::$height = $h;
-		self::$numberBombs = $n;
-	}
-	public static function setSettings(array $settings)
-	{
-		if (self::filterSettings($settings)) {
-			if (self::changedSettings($settings)) {
-				self::saveSettings($settings);
-				self::setSettingsToCookie();
-				self::newMiner();
-			}
-		}
+		try {
+			self::getSettings()->setSettings($arraySettings);
+			self::setSettingsToCookie();
+			self::newMiner();
+			self::$messages[] = 'Настройки изменены, '.self::getSettings()->getArraySettings()['name'];
+		} catch (\Exception $e) {
+			self::$messages[] = 'Пользовательская ошибка настроек: '.$e->getMessage();
+		}	
 	}
 	public static function getSettings()
 	{
-		return array(
-			"width" => self::$width,
-			"height" => self::$height,
-			"numberBombs" => self::$numberBombs
-		);
+		if (self::$settings == NULL) {
+			self::$settings = new Settings();
+		}
+		return self::$settings;
 	}
 	public static function setSettingsToCookie()
 	{
-		$settings = serialize([
-			'width' => self::$width,
-			'height' => self::$height,
-			'numberBombs' => self::$numberBombs
-		]);
-		setcookie(self::COOKIE_NAME, $settings, time()+self::COOKIE_TIME);
+		$serialSettings = serialize(self::getSettings()->getArraySettings());
+		setcookie(self::COOKIE_NAME, $serialSettings, time()+self::COOKIE_TIME);
 	}
 	public static function loadSettingsFromCookie()
 	{
-		$value = $_COOKIE[self::COOKIE_NAME];
-		$settings = unserialize($value);
-		if (is_array($settings)) {
-			if (self::filterSettings($settings)) {
-				if (self::changedSettings($settings)) {
-					self::saveSettings($settings);
-				}
-			}		
+		$serialSettings = $_COOKIE[self::COOKIE_NAME];
+		$arraySettings = unserialize($serialSettings);
+		if (is_array($arraySettings)) {
+			try {
+				self::getSettings()->setSettings($arraySettings);
+				self::$messages[] = 'Привет, '.self::getSettings()->getArraySettings()['name'];
+			} catch (\Exception $e) {
+				self::$messages[] = 'Cookie ошибка настроек: '.$e->getMessage();
+			}	
 		}
 	}
 	public static function getMiner()
@@ -124,19 +77,21 @@ class MinerController
 	}
 	public static function newMiner()
 	{
-		self::$miner = new Miner(self::$height, self::$width, self::$numberBombs);
+		$s = self::getSettings()->getArraySettings();
+		self::$miner = new Miner($s['height'], $s['width'], $s['numberBombs']);
 	}	
 	public static function isBomb($coord)
 	{
 		if (is_string($coord)) {
+			$arraySettings = self::getSettings()->getArraySettings();
 			$coord = explode('_', $coord);
 			$w = (int)$coord[2];
 			$h = (int)$coord[1];
 			if (
 				$w >= 0 &&
-				$w < self::$width &&
+				$w < $arraySettings['width'] &&
 				$h >= 0 &&
-				$h < self::$height
+				$h < $arraySettings['height']
 			) {
 				$miner = self::getMiner();
 				$miner->isBomb((int)$h, (int)$w);
@@ -150,7 +105,10 @@ class MinerController
 	}
 	public static function getMessages()
 	{
-		return self::getMiner()->getMessages();
+		return array_merge(
+			self::getMiner()->getMessages(),
+			self::$messages
+		);
 	}
 	public static function clearMessages()
 	{

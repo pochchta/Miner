@@ -14,6 +14,7 @@ $autoload = function ($path) {
 \spl_autoload_register($autoload);
 session_start();
 
+MinerController::loadSettingsFromCookie();
 MinerController::loadMinerFromSession();
 if (isset($_POST['setSettings'])) {
 	MinerController::setSettings($_POST);
@@ -28,10 +29,14 @@ MinerController::clearMessages();
 MinerController::saveMinerToSession();
 
 
-// print "<pre>";
-// var_dump($_POST);
-// print "<br>";
-// var_dump(MinerController::getMiner()->isEndGame());
-// print "<br></pre>";
+// v(MinerController::getSettings()->getArraySettings());
+
+function v($test)
+{
+	print "<pre>";
+	var_dump($test);
+	print "</pre>";
+}
+
 
 // unset($_SESSION['minerCtrl']);

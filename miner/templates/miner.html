@@ -2,13 +2,14 @@
 
 namespace miner\classes;
 
+$settings = MinerController::getSettings()->getArraySettings();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Miner</title>
+	<title><?php print 'Привет, '.$settings['name'] ?></title>
     <link href="/Miner/css/style.css" type="text/css" rel="stylesheet"/>
     <script src="/Miner/js/lib.js" defer></script>
     <script src="/Miner/js/script.js" defer></script>
@@ -32,9 +33,11 @@ namespace miner\classes;
 			$names = array(
 				"width" => "Ширина",
 				"height" => "Высота",
-				"numberBombs" => "Кол-во бомб"
+				"numberBombs" => "Кол-во бомб",
+				"cellSize" => "Размер ячеек",
+				"name" => "Имя пользователя"
 			);
-			foreach (MinerController::getSettings() as $key => $value) {
+			foreach (MinerController::getSettings()->getArraySettings() as $key => $value) {
 				print "{$names[$key]} <input type='text' name='{$key}' value='{$value}'><br>";
 			}
 		?>
