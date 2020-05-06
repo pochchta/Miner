@@ -2,7 +2,7 @@
 
 namespace miner\classes;
 
-abstract class MinerController
+class MinerController
 {
 	const MIN_WIDTH = 1;
 	const MIN_HEIGHT = 1;
@@ -12,11 +12,14 @@ abstract class MinerController
 	const MAX_NUMBER_BOMBS = 100;
 	const SESSION_NAME = 'minerSession';
 	const COOKIE_NAME = 'settings';
-	const COOKIE_TIME = 60 * 60 * 24 * 30;	// month
+	const COOKIE_TIME = 2592000;	// 60 * 60 * 24 * 30 = month
 	private static $miner = NULL;
 	private static $width = 10;
 	private static $height = 10;
 	private static $numberBombs = 10;
+	private function __construct()
+	{
+	}
 	public static function loadMinerFromSession()
 	{
 		if (isset($_SESSION[self::SESSION_NAME])) {
