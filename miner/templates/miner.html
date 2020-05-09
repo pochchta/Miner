@@ -3,6 +3,7 @@
 namespace miner\classes;
 
 $settings = MinerController::getSettings()->getArraySettings();
+$miner = MinerController::getMiner();
 ?>
 
 <!DOCTYPE html>
@@ -23,22 +24,27 @@ $settings = MinerController::getSettings()->getArraySettings();
 	?>
 	</div>
 	<br><br>
-	<?php MinerWriter::printField(MinerController::getMiner()); ?>
-	<br><br>
+	<?php MinerWriter::printField($miner); ?>
+	<br>
 	<form action="/" method="POST" id="formClickField">
 		<input type="hidden" name="coord">
 	</form>
+	<form name="formRemainingBombs">
+		Осталось бомб:
+		<input type="text" name="bombs" value="<?php print $miner->getSettings()['numberBombs']?>">
+	</form>
+	<br>
 	<form action="/" method="POST" id=formSettings>
 		<?php
 			$names = array(
+				"name" => "Имя пользователя",
 				"width" => "Ширина",
 				"height" => "Высота",
 				"numberBombs" => "Кол-во бомб",
-				"cellSize" => "Размер ячеек",
-				"name" => "Имя пользователя"
+				//"cellSize" => "Размер ячеек"
 			);
-			foreach (MinerController::getSettings()->getArraySettings() as $key => $value) {
-				print "{$names[$key]} <input type='text' name='{$key}' value='{$value}'><br>";
+			foreach ($names as $key => $value) {
+				print "{$value} <input type='text' name='{$key}' value='{$settings[$key]}'><br>";
 			}
 		?>
 		<button name="newGame" onClick="clearImageField()">NewGame</button>

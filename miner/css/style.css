@@ -17,6 +17,13 @@
 	/* font-weight: 700; */
 	font-size: 20px;
 	background-size: cover;
+	opacity: 0.95;
+}
+.cell:hover{
+	opacity: 0.9;
+}
+.cell:active{
+	opacity: 1;
 }
 .cell.notVisible{
 	background-color: #D9D9F1;
@@ -26,7 +33,7 @@
 	background-color: #ADADE9;
 }
 .cell.notBomb{
-	background-color: #F8F8F8;
+	background-color: #FFFFFF;
 }
 .cell.bomb{
 	background-color: #E38D8D;

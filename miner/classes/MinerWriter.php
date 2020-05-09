@@ -28,7 +28,7 @@ class MinerWriter
 							$class .= 'notBomb';
 						}
 					} 
-					print "<div class='{$class}' id='cell_{$h}_{$w}'>$cell</div>";
+					print "<div class='{$class}' id='_{$h}_{$w}'>$cell</div>";
 				}
 			}
 			print '</div>';

@@ -2,6 +2,8 @@ const DEFAULT = 0;
 const FLAG = 1;
 const QUESTION = 2;
 const CLASS_NOT_VISIBLE = "cell notVisible";
+const CLASS_BOMB = "cell bomb";
+const CLASS_EXPLODED_BOMB = "cell explodedBomb";
 
 function showImageCell(elements)
 {
@@ -14,10 +16,13 @@ function showImageCell(elements)
 			}
 		}
 		cellView = localStorage.getItem(item.id);
+		defaultImageUrl = "url('/miner/images/notVisible128.gif')";
 		if (cellView == null || cellView == DEFAULT) {
 			item.style = "";
 		} else if (cellView == FLAG) {
-			item.style = "background-image: url('/miner/images/flagTransp128.gif'), url('/miner/images/notVisible128.gif')";
+			item.style = "background-image: url('/miner/images/flagTransp128.gif')," + defaultImageUrl;
+		} else if (cellView == QUESTION) {
+			item.style = "background-image: url('/miner/images/questionTransp128.gif')," + defaultImageUrl;
 		}
 	}
 }
@@ -26,7 +31,10 @@ function leftClickCell(item)
 	if (item.className == CLASS_NOT_VISIBLE) {
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
-			document.forms["formClickField"].coord.value = item.id;
+			document.forms["formClickField"].coord.value = "test" + item.id;
+			document.forms["formClickField"].submit();
+		} else if (cellView == QUESTION) {
+			document.forms["formClickField"].coord.value = "help" + item.id;
 			document.forms["formClickField"].submit();
 		}
 	}		
@@ -37,8 +45,14 @@ function rightClickCell(item)
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
 			localStorage.setItem(item.id, FLAG);
+			document.forms["formRemainingBombs"].bombs.value = 
+				+document.forms["formRemainingBombs"].bombs.value - 1;			
 		} else if (cellView == FLAG) {
+			localStorage.setItem(item.id, QUESTION);
+		} else if (cellView == QUESTION) {
 			localStorage.setItem(item.id, DEFAULT);
+			document.forms["formRemainingBombs"].bombs.value = 
+				+document.forms["formRemainingBombs"].bombs.value + 1;			
 		}
 		showImageCell([item]);
 	}

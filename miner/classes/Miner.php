@@ -12,6 +12,7 @@ class Miner
 	private $width;
 	private $height;
 	private $numberBombs;
+	private $counterHelp = 0;
 	const MESSAGE_LOSE_GAME = 'Вы проиграли.';
 	const MESSAGE_WIN_GAME = 'Поздравляем. Вы победили.';
 	const MESSAGE_END_GAME = 'Игра закончена. Начните новую.';
@@ -54,15 +55,16 @@ class Miner
 			}
 		}
 	}
-	public function isBomb($h, $w)
+	public function isBomb($h, $w, $help = false)
 	{
 		if ($this->isEndGame() == false) {
+			if ($help) $this->counterHelp++;
 			$cell = $this->field[$h][$w];
 			while ($cell instanceof BombCell && $this->startGame == false) {
 				self::__construct($this->height, $this->width, $this->numberBombs);
 				$cell = $this->field[$h][$w];
 			}
-			if ($cell instanceof BombCell) {
+			if ($cell instanceof BombCell && $help == false) {
 				$cell->exploded = true;
 				$this->endGame = true;
 				$this->messages[] = self::MESSAGE_LOSE_GAME;
@@ -71,14 +73,17 @@ class Miner
 				if ($cell instanceof Cell && $cell->visible == false) {
 					$this->startGame = true;
 					$cell->visible = true;
-					$this->countEmptyCell--;
+					if ($cell instanceof EmptyCell) {
+						$this->countEmptyCell--;
+					}
 					$this->openBesideCell($h, $w);
+					$this->messages[] = "Осталось разминировать {$this->countEmptyCell} клеток";
 				}
 			}
 		}
 		if ($this->countEmptyCell == 0) {
 			$this->endGame = true;
-			$this->messages[] = self::MESSAGE_WIN_GAME;
+			$this->messages[] = self::MESSAGE_WIN_GAME." Помощь получена {$this->counterHelp} раз";
 		}		
 		if ($this->isEndGame() == true) {
 			$this->messages[] = self::MESSAGE_END_GAME;

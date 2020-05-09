@@ -29,8 +29,7 @@ MinerController::clearMessages();
 MinerController::saveMinerToSession();
 
 
-// v(MinerController::getSettings()->getArraySettings());
-
+//---------------------------------------------------
 function v($test)
 {
 	print "<pre>";
@@ -39,4 +38,4 @@ function v($test)
 }
 
 
-// unset($_SESSION['minerCtrl']);
+v($_POST);

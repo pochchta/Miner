@@ -85,6 +85,8 @@ class MinerController
 		if (is_string($coord)) {
 			$arraySettings = self::getSettings()->getArraySettings();
 			$coord = explode('_', $coord);
+			$help = false;
+			if ($coord[0] == 'help') $help = true;
 			$w = (int)$coord[2];
 			$h = (int)$coord[1];
 			if (
@@ -94,7 +96,7 @@ class MinerController
 				$h < $arraySettings['height']
 			) {
 				$miner = self::getMiner();
-				$miner->isBomb((int)$h, (int)$w);
+				$miner->isBomb((int)$h, (int)$w, $help);
 			}
 		}
 		return false;
@@ -106,8 +108,8 @@ class MinerController
 	public static function getMessages()
 	{
 		return array_merge(
-			self::getMiner()->getMessages(),
-			self::$messages
+			self::$messages,
+			self::getMiner()->getMessages()
 		);
 	}
 	public static function clearMessages()
