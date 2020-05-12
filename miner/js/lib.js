@@ -45,14 +45,12 @@ function rightClickCell(item)
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
 			localStorage.setItem(item.id, FLAG);
-			document.forms["formRemainingBombs"].bombs.value = 
-				+document.forms["formRemainingBombs"].bombs.value - 1;			
+			idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - 1, 3);
 		} else if (cellView == FLAG) {
 			localStorage.setItem(item.id, QUESTION);
 		} else if (cellView == QUESTION) {
 			localStorage.setItem(item.id, DEFAULT);
-			document.forms["formRemainingBombs"].bombs.value = 
-				+document.forms["formRemainingBombs"].bombs.value + 1;			
+			idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML + 1, 3);
 		}
 		showImageCell([item]);
 	}
@@ -89,5 +87,61 @@ function loadSettings()
 		document.forms["formSettings"].height.value = settings.height;
 		document.forms["formSettings"].numberBombs.value = settings.numberBombs;
 		return settings;
+	}
+}
+function formatNumber(number, numberDigits)
+{
+	sign = '';
+	if (number < 0) {
+		sign = '-';
+		numberDigits--;
+	}
+	number = String(Math.abs(number));
+	while (number.length < numberDigits) {
+		number = '0' + number;
+	}
+	return sign + number;
+}
+function incTimer()
+{
+	if (idTimer.innerHTML < 999) {
+		idTimer.innerHTML = formatNumber(+idTimer.innerHTML + 1, 3);
+	}
+}
+function setLevel(level)
+{
+	switch (level) {
+		case 1:
+		setSettings(10, 10, 10, true);
+		break;
+		case 2:
+		setSettings(16, 16, 40, true);
+		break;	
+		case 3:
+		setSettings(16, 30, 100, true);
+		break;
+		default:
+		setSettings(10, 10, 10, false);
+	}
+}
+function setSettings(h, w, b, ro)
+{
+	document.forms["formSettings"].height.value = h;
+	document.forms["formSettings"].width.value = w;
+	document.forms["formSettings"].numberBombs.value = b;
+	if (ro == true) {
+		document.forms["formSettings"].height.readOnly = true;
+		document.forms["formSettings"].width.readOnly = true;
+		document.forms["formSettings"].numberBombs.readOnly = true;
+		document.forms["formSettings"].height.style = "opacity: 0.6";
+		document.forms["formSettings"].width.style = "opacity: 0.6";
+		document.forms["formSettings"].numberBombs.style = "opacity: 0.6";	
+	} else {
+		document.forms["formSettings"].height.readOnly = false;
+		document.forms["formSettings"].width.readOnly = false;
+		document.forms["formSettings"].numberBombs.readOnly = false;
+		document.forms["formSettings"].height.style = "opacity: 1";
+		document.forms["formSettings"].width.style = "opacity: 1";
+		document.forms["formSettings"].numberBombs.style = "opacity: 1";
 	}
 }

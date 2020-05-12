@@ -9,10 +9,15 @@ for (var i = 0; i < elements.length; i++) {
 		rightClickCell(this);
 		return false;
 	}
+	cellView = localStorage.getItem(elements[i].id);
 	if (
 		elements[i].className == CLASS_BOMB ||
-		elements[i].className == CLASS_EXPLODED_BOMB
+		elements[i].className == CLASS_EXPLODED_BOMB ||
+		(cellView != null && cellView != DEFAULT)
 	) counterBombCell++;
 }
-document.forms["formRemainingBombs"].bombs.value = 
-	+document.forms["formRemainingBombs"].bombs.value - counterBombCell;
+idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - counterBombCell, 3);
+idCounterBomb.style = "opacity: 1";
+idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
+idTimer.style = "opacity: 1";
+setInterval(incTimer, 1000);

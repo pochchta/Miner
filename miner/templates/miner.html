@@ -29,27 +29,39 @@ $miner = MinerController::getMiner();
 	<form action="/" method="POST" id="formClickField">
 		<input type="hidden" name="coord">
 	</form>
-	<form name="formRemainingBombs">
-		Осталось бомб:
-		<input type="text" name="bombs" value="<?php print $miner->getSettings()['numberBombs']?>">
-	</form>
+	<div class="digitalBlock">
+		<div id="idCounterBomb"><?php print $miner->getSettings()['numberBombs']?></div>
+		<div id="idTimer">0</div>
+	</div>
 	<br>
-	<form action="/" method="POST" id=formSettings>
+
+	<form action="/" method="POST" id=formSettings class="settings">
+		<div class="newGame button10" onClick="">New Game</div>
+		<div class="level">
+			<div class="button10" onClick="setLevel(1)">0+</div>
+			<div class="button10" onClick="setLevel(2)">12+</div>
+			<div class="button10" onClick="setLevel(3)">18+</div>
+			<div class="button10" onClick="setLevel(0)">SELF</div>
+		</div>
 		<?php
-			$names = array(
-				"name" => "Имя пользователя",
-				"width" => "Ширина",
-				"height" => "Высота",
-				"numberBombs" => "Кол-во бомб",
-				//"cellSize" => "Размер ячеек"
-			);
-			foreach ($names as $key => $value) {
-				print "{$value} <input type='text' name='{$key}' value='{$settings[$key]}'><br>";
+		$names = array(
+		"name" => "Имя пользователя",
+		"width" => "Ширина",
+		"height" => "Высота",
+		"numberBombs" => "Кол-во бомб",
+		);
+		foreach ($names as $key => $value) {
+				print "<div class='row'>";
+				print "<div class='name'>{$value}</div>";
+				print "<input type='text' name='{$key}' value='{$settings[$key]}' class='value'>";
+				print "</div>";
 			}
 		?>
-		<button name="newGame" onClick="clearImageField()">NewGame</button>
+		<div class="saveSettings button10">Save Settings</div>
+
+<!-- 		<button name="newGame" onClick="clearImageField()">NewGame</button>
 		<button name="loadGame">LoadGame</button>
-		<button name="setSettings">SetSettings</button>
+		<button name="setSettings">SetSettings</button> -->
 	</form>
 </body>
 </html>
