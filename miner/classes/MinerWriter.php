@@ -4,6 +4,7 @@ namespace miner\classes;
 
 class MinerWriter
 {
+	const MAX_TIME_GAME = 999;
 	public static function printField(Miner $miner)
 	{
 
@@ -34,5 +35,18 @@ class MinerWriter
 			print '</div>';
 		}
 		print '</div>';
+	}
+	public static function printTimeGame(Miner $miner)
+	{
+		if ($miner->getTimeStamp() == 0) {
+			print '0';
+			return;
+		}
+		$timeGame = time() - $miner->getTimeStamp();
+		if ($timeGame > self::MAX_TIME_GAME) {
+			print self::MAX_TIME_GAME;
+			return;
+		}
+		print $timeGame;
 	}
 }

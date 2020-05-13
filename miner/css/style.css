@@ -3,7 +3,12 @@ font-family: Electronica-Normal;
 src: url("/miner/fonts/Electronica-Normal.woff") format("woff");
 }
 
-*:focus {outline: none;}
+button {
+	font-family: Times New Roman;
+}
+*:focus {
+	outline: none;
+}
 
 .button10 {
   display: inline-block;
@@ -98,20 +103,17 @@ src: url("/miner/fonts/Electronica-Normal.woff") format("woff");
 	width: 50px;
 }
 
-.settings .newGame{
-	margin-bottom: 10px;
-	width: 311px;
-	text-align: center;
-}
+.settings .newGame,
 .settings .saveSettings{
 	margin-bottom: 10px;
-	width: 311px;
+	width: 333px;
 	text-align: center;
 }
 .settings .row{
 	margin: 5px 0;
 	overflow: hidden;
 	clear: both;
+	/*font-family: Arial;*/
 }
 .settings .row .name{
 	float: left;

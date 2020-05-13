@@ -13,6 +13,7 @@ class Miner
 	private $height;
 	private $numberBombs;
 	private $counterHelp = 0;
+	private $timeStamp = 0;
 	const MESSAGE_LOSE_GAME = 'Вы проиграли.';
 	const MESSAGE_WIN_GAME = 'Поздравляем. Вы победили.';
 	const MESSAGE_END_GAME = 'Игра закончена. Начните новую.';
@@ -58,18 +59,21 @@ class Miner
 	public function isBomb($h, $w, $help = false)
 	{
 		if ($this->isEndGame() == false) {
+			if ($this->timeStamp == 0) {
+				$this->timeStamp = time();
+			}
 			if ($help) $this->counterHelp++;
 			$cell = $this->field[$h][$w];
-			while ($cell instanceof BombCell && $this->startGame == false) {
+			while ($cell instanceof BombCell && $this->startGame == false) {	// перегенерация игрового поля
 				self::__construct($this->height, $this->width, $this->numberBombs);
 				$cell = $this->field[$h][$w];
 			}
-			if ($cell instanceof BombCell && $help == false) {
+			if ($cell instanceof BombCell && $help == false) {					// неудачное разминирование
 				$cell->exploded = true;
 				$this->endGame = true;
 				$this->messages[] = self::MESSAGE_LOSE_GAME;
 			}
-			if ($this->isEndGame() == false) {
+			if ($this->isEndGame() == false) {									// удачное разминирование
 				if ($cell instanceof Cell && $cell->visible == false) {
 					$this->startGame = true;
 					$cell->visible = true;
@@ -133,5 +137,9 @@ class Miner
 			'height' => $this->height,
 			'numberBombs' => $this->numberBombs
 		);
+	}
+	public function getTimeStamp()
+	{
+		return $this->timeStamp;
 	}
 }
