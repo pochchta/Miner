@@ -77,8 +77,7 @@ class MinerController
 	}
 	public static function newMiner()
 	{
-		$s = self::getSettings()->getArraySettings();
-		self::$miner = new Miner($s['height'], $s['width'], $s['numberBombs']);
+		self::$miner = new Miner(self::getSettings()->getArraySettings());
 	}	
 	public static function isBomb($coord)
 	{

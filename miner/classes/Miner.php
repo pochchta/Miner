@@ -1,6 +1,7 @@
 <?php
 
 namespace miner\classes;
+use Exception;
 
 class Miner
 {
@@ -9,19 +10,18 @@ class Miner
 	private $endGame = false;
 	private $startGame = false;
 	private $countEmptyCell;
-	private $width;
-	private $height;
-	private $numberBombs;
+	private $settings = array();
 	private $counterHelp = 0;
 	private $timeStamp = 0;
 	const MESSAGE_LOSE_GAME = 'Вы проиграли.';
 	const MESSAGE_WIN_GAME = 'Поздравляем. Вы победили.';
 	const MESSAGE_END_GAME = 'Игра закончена. Начните новую.';
-	public function __construct($height, $width, $numberBombs)
+	public function __construct($settings)
 	{
-		$this->width = $width;
-		$this->height = $height;
-		$this->numberBombs = $numberBombs;
+		$this->settings = $settings;
+		$width = $this->settings['width'];
+		$height = $this->settings['height'];
+		$numberBombs = $this->settings['numberBombs'];
 		$this->countEmptyCell = $width * $height - $numberBombs;
 		for ($h = 0; $h < $height; $h++){
 			for ($w = 0; $w < $width; $w++){
@@ -85,9 +85,20 @@ class Miner
 				}
 			}
 		}
-		if ($this->countEmptyCell == 0) {
+		if ($this->countEmptyCell == 0 && $this->endGame == false) {
 			$this->endGame = true;
 			$this->messages[] = self::MESSAGE_WIN_GAME." Помощь получена {$this->counterHelp} раз";
+			try {
+				$mapper = new RecordMapper();
+				$mapper->insert(
+					array_merge(
+						$this->settings,
+						array($this->counterHelp)
+					)
+				);
+			} catch (Exception $e) {
+
+			}
 		}		
 		if ($this->isEndGame() == true) {
 			$this->messages[] = self::MESSAGE_END_GAME;
@@ -132,11 +143,7 @@ class Miner
 	}
 	public function getSettings()
 	{
-		return array(
-			'width' => $this->width,
-			'height' => $this->height,
-			'numberBombs' => $this->numberBombs
-		);
+		return $this->settings;
 	}
 	public function getTimeStamp()
 	{
