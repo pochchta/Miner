@@ -18,18 +18,20 @@ class RecordMapper
 		}
 		return $this->pdo;
 	}
-	public function findAll($quantity = 0)
+	public function findAll($start = 0, $limit = 10)
 	{
 		$pdo = $this->getPDO();
-		$stmt = $pdo->query("SELECT name, width, height, numberBombs, counterHelp FROM records LIMIT 0, {$quantity}");
+		$stmt = $pdo->prepare("SELECT name, width, height, numberBombs, counterHelp FROM records LIMIT ?, ?");
+		$stmt->bindValue(1, $start, PDO::PARAM_INT);
+		$stmt->bindValue(2, $limit, PDO::PARAM_INT);
+		$stmt->execute();
 		$collection = $stmt->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'miner\classes\Record', [array()]);
 		return $collection;
 	}
-	public function insert($data)
+	public function insert(Record $record)
 	{
-		$record = new Record($data);
 		$pdo = $this->getPDO();
 		$stmt = $pdo->prepare("INSERT INTO records(name, width, height, numberBombs, counterHelp) VALUES(?, ?, ?, ?, ?)");
-		$stmt->execute([$data['name'], $data['width'], $data['height'], $data['numberBombs'], $data['counterHelp']]);
+		$stmt->execute(array_values($record->getPropArray()));
 	}
 }

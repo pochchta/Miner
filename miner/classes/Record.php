@@ -17,4 +17,14 @@ class Record
 		$this->numberBombs = $settings['numberBombs'];
 		$this->counterHelp = $settings['counterHelp'];
 	}
+	public function getPropArray()
+	{
+		return array(
+			'name' => $this->name,
+			'width' => $this->width,
+			'height' => $this->height,
+			'numberBombs' => $this->numberBombs,
+			'counterHelp' => $this->counterHelp
+		);
+	}
 }

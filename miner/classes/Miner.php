@@ -1,7 +1,6 @@
 <?php
 
 namespace miner\classes;
-use Exception;
 
 class Miner
 {
@@ -88,15 +87,16 @@ class Miner
 		if ($this->countEmptyCell == 0 && $this->endGame == false) {
 			$this->endGame = true;
 			$this->messages[] = self::MESSAGE_WIN_GAME." Помощь получена {$this->counterHelp} раз";
+			$record = new Record(
+				array_merge(
+					$this->settings,
+					array($this->counterHelp)
+				)
+			);
+			$mapper = new RecordMapper();
 			try {
-				$mapper = new RecordMapper();
-				$mapper->insert(
-					array_merge(
-						$this->settings,
-						array($this->counterHelp)
-					)
-				);
-			} catch (Exception $e) {
+				$mapper->insert($record);
+			} catch (\Exception $e) {
 
 			}
 		}		
