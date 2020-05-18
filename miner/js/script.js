@@ -25,10 +25,16 @@ for (var i = 0; i < elements.length; i++) {
 		counterVisibleCell++;
 	}
 }
-if (counterVisibleCell && counterNotVisibleCell != false) {
+if ((counterVisibleCell && counterNotVisibleCell) != false) {
 	setInterval(incTimer, 1000);
 }
 idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - counterBombCell, 3);
-idCounterBomb.style = "opacity: 1";
 idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
-idTimer.style = "opacity: 1";
+digitalBlock.style = "opacity: 1";
+
+let newGame = document.querySelectorAll(".newGame");
+newGame[0].onclick = function() {
+	document.forms["formClickField"].newGame.value = 'newGame';
+	document.forms["formClickField"].submit();
+	clearImageField();
+}

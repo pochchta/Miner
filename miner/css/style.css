@@ -41,6 +41,9 @@ button {
 	overflow: hidden;
 }
 
+.field{
+	margin-bottom: 10px;
+}
 .field .row{
 	overflow: hidden;
 }
@@ -62,17 +65,17 @@ button {
 	opacity: 1;
 }
 .field .cell.notVisible{
-	background-color: #D9D9F1;
+	/*background-color: #D9D9F1;*/
 	background-image: url(/miner/images/notVisible128.gif);
 }
 .field .cell.numberBombs{
 	background-color: #ADADE9;
 }
 .field .cell.notBomb{
-	background-color: #FFFFFF;
+	/*background-color: #FFFFFF;*/
 }
 .field .cell.bomb{
-	background-color: #E38D8D;
+	/*background-color: #E38D8D;*/
 	background-image: url(/miner/images/bombTransp128.gif);
 }
 .field .cell.explodedBomb{
@@ -80,46 +83,71 @@ button {
 }
 
 .digitalBlock{
-	clear: both;
-    overflow: hidden;
+	display: flex;
+	justify-content: space-between;
+	width: 333px;
+	margin-bottom: 10px;
+	opacity: 0;
 }
-.digitalBlock div{
-	float: left;
+.digitalBlock .electronic{
 	font-family: Electronica-Normal;
 	font-size: 40px;
 	color: #780707;
-	margin-right: 208px;
-	opacity: 0;
+	margin-top: 3px;
 }
 
+.info{
+	display: flex;
+}
+.settings{
+	width: 333px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
 .settings .level{
-	clear: both;
-	overflow: hidden;
-	/*height: 40px;*/
+	display: flex;
+	justify-content: space-between;
 }
 .settings .level .button10{
-	float: left;
-	margin-right: 15px;
 	width: 50px;
 }
-
-.settings .newGame,
 .settings .saveSettings{
-	margin-bottom: 10px;
-	width: 333px;
+	width: 100%;
 	text-align: center;
 }
 .settings .row{
-	margin: 5px 0;
-	overflow: hidden;
-	clear: both;
-	/*font-family: Arial;*/
+	text-align: justify;
+	display: flex;
+	justify-content: space-between;
 }
 .settings .row .name{
-	float: left;
-	width: 170px;
 }
 .settings .row .value{
-	float: left;
-	width: 159px;
+	width: 165px;
+}
+
+.statistic{
+	flex-grow: 1;
+	margin-left: 10px;
+}
+.statistic .table{
+	display: flex;
+}
+.statistic .td{
+	flex-grow: 1;
+	border-left: 1px solid black;
+}
+.statistic .td:last-child{
+	border-right: 1px solid black;
+}
+.statistic .tr{
+	border-top: 1px solid black;
+	padding-left: 3px;
+}
+.statistic .tr:last-child{
+	border-bottom: 1px solid black;
+}
+.statistic .tr:first-child{
+	font-weight: 700;
 }
