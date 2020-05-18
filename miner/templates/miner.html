@@ -4,6 +4,8 @@ namespace miner\classes;
 
 $settings = MinerController::getSettings()->getArraySettings();
 $miner = MinerController::getMiner();
+$rm = new RecordMapper();
+$coll = $rm->findAll(0, 10);
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +18,6 @@ $miner = MinerController::getMiner();
     <script src="/miner/js/script.js" defer></script>
 </head>
 <body>
-
 	<div class="digitalBlock" id="digitalBlock">
 		<div id="idCounterBomb" class="electronic"><?php print $miner->getSettings()['numberBombs']?></div>
 		<button name="newGame" class="newGame button10">New Game</button>
@@ -35,7 +36,7 @@ $miner = MinerController::getMiner();
 				<div class="button10" onClick="setLevel(1)">0+</div>
 				<div class="button10" onClick="setLevel(2)">12+</div>
 				<div class="button10" onClick="setLevel(3)">18+</div>
-				<div class="button10" onClick="setLevel(0)">SELF</div>
+				<div class="button10" onClick="setLevel(0)">Свои</div>
 			</div>
 			<?php
 				$names = array(
@@ -54,19 +55,7 @@ $miner = MinerController::getMiner();
 			<button name="setSettings" class="saveSettings button10">Save Settings</button>
 		</form>
 		<div class="statistic">
-			<div class="table">
-				<?php 
-					foreach (range(0, 4) as $key => $value) {
-						print '<div class="td">';
-							foreach (range(0, 10) as $key => $value) {
-								print '<div class="tr">';
-								print 'cell';
-								print '</div class="tr">';
-							}
-						print '</div class="td">';
-					}
-				?>
-			</div class="table">
+			<?php RecordWriter::printTable($coll); ?>
 		</div>
 	</div>
 

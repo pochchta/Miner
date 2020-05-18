@@ -18,7 +18,7 @@ class Settings
 	private $numberBombs = 10;
 	private $cellSize = 15;
 	private $name = 'unknown';
-	public function setSettings(array $settings)
+	public function setSettings(array $settings = array())
 	{
 		try {
 			if (isset($settings['width'])) {
