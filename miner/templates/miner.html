@@ -6,7 +6,7 @@ $settings = MinerController::getSettings()->getArraySettings();
 $level = MinerController::getSettings()->getLevel();
 $miner = MinerController::getMiner();
 $rm = new RecordMapper();
-$coll = $rm->findAll(0, 10);
+$coll = $rm->findAll($settings['level'], 0, 10);
 ?>
 
 <!DOCTYPE html>

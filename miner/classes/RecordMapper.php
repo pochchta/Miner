@@ -18,12 +18,20 @@ class RecordMapper
 		}
 		return $this->pdo;
 	}
-	public function findAll($start = 0, $limit = 10)
+	public function findAll($level = NULL, $start = 0, $limit = 10)
 	{
 		$pdo = $this->getPDO();
-		$stmt = $pdo->prepare("SELECT name, level, counterHelp, time FROM records LIMIT ?, ?");
-		$stmt->bindValue(1, $start, PDO::PARAM_INT);
-		$stmt->bindValue(2, $limit, PDO::PARAM_INT);
+		$where = '';
+		if (isset($level)) {
+			$where = 'WHERE level = ?';
+		}
+		$stmt = $pdo->prepare("SELECT name, level, counterHelp, time FROM records {$where} ORDER BY counterHelp, time LIMIT ?, ?");
+				if (isset($level)) {
+			$stmt->bindValue(1, $level);
+		}
+		$stmt->bindValue(2, $start, PDO::PARAM_INT);
+		$stmt->bindValue(3, $limit, PDO::PARAM_INT);
+
 		$stmt->execute();
 		$collection = $stmt->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'miner\classes\Record', [array()]);
 		return $collection;
