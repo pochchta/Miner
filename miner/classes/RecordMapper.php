@@ -21,7 +21,7 @@ class RecordMapper
 	public function findAll($start = 0, $limit = 10)
 	{
 		$pdo = $this->getPDO();
-		$stmt = $pdo->prepare("SELECT name, width, height, numberBombs, counterHelp FROM records LIMIT ?, ?");
+		$stmt = $pdo->prepare("SELECT name, level, counterHelp, time FROM records LIMIT ?, ?");
 		$stmt->bindValue(1, $start, PDO::PARAM_INT);
 		$stmt->bindValue(2, $limit, PDO::PARAM_INT);
 		$stmt->execute();
@@ -31,7 +31,7 @@ class RecordMapper
 	public function insert(Record $record)
 	{
 		$pdo = $this->getPDO();
-		$stmt = $pdo->prepare("INSERT INTO records(name, width, height, numberBombs, counterHelp) VALUES(?, ?, ?, ?, ?)");
+		$stmt = $pdo->prepare("INSERT INTO records(name, level, counterHelp, time) VALUES(?, ?, ?, ?)");
 		$stmt->execute(array_values($record->getPropArray()));
 	}
 }
