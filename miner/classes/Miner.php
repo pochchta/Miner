@@ -11,7 +11,8 @@ class Miner
 	private $countEmptyCell;
 	private $settings = array();
 	private $counterHelp = 0;
-	private $timeStamp = 0;
+	private $startTime = 0;
+	private $endTime = 0;
 	const MESSAGE_LOSE_GAME = 'Вы проиграли.';
 	const MESSAGE_WIN_GAME = 'Поздравляем. Вы победили.';
 	const MESSAGE_END_GAME = 'Игра закончена. Начните новую.';
@@ -58,22 +59,26 @@ class Miner
 	public function isBomb($h, $w, $help = false)
 	{
 		if ($this->isEndGame() == false) {
-			if ($this->timeStamp == 0) {
-				$this->timeStamp = time();
-			}
-			if ($help) $this->counterHelp++;
+			$settings = $this->settings;
 			$cell = $this->field[$h][$w];
-			while ($cell instanceof BombCell && $this->startGame == false) {	// перегенерация игрового поля
-				self::__construct($this->height, $this->width, $this->numberBombs);
+			while (
+				($cell instanceof BombCell) &&
+				($this->startGame == false)
+			) {																	// перегенерация игрового поля
+				self::__construct($settings);
 				$cell = $this->field[$h][$w];
 			}
-			if ($cell instanceof BombCell && $help == false) {					// неудачное разминирование
+			if ($this->startTime == 0) {
+				$this->startTime = time();
+			}
+			if ($help) $this->counterHelp++;
+			if (($cell instanceof BombCell) && ($help == false)) {					// неудачное разминирование
 				$cell->exploded = true;
 				$this->endGame = true;
 				$this->messages[] = self::MESSAGE_LOSE_GAME;
 			}
 			if ($this->isEndGame() == false) {									// удачное разминирование
-				if ($cell instanceof Cell && $cell->visible == false) {
+				if (($cell instanceof Cell) && ($cell->visible == false)) {
 					$this->startGame = true;
 					$cell->visible = true;
 					if ($cell instanceof EmptyCell) {
@@ -90,7 +95,10 @@ class Miner
 			$record = new Record(
 				array_merge(
 					$this->settings,
-					array($this->counterHelp)
+					array(
+						'counterHelp' => $this->counterHelp,
+						'time' => $this->getTime()
+					)
 				)
 			);
 			$mapper = new RecordMapper();
@@ -101,6 +109,9 @@ class Miner
 			}
 		}		
 		if ($this->isEndGame() == true) {
+			if ($this->endTime == 0) {
+				$this->endTime = time();
+			}
 			$this->messages[] = self::MESSAGE_END_GAME;
 		}	
 	}
@@ -145,8 +156,14 @@ class Miner
 	{
 		return $this->settings;
 	}
-	public function getTimeStamp()
+	public function getTime()
 	{
-		return $this->timeStamp;
+		if ($this->startTime == 0) {
+			return 0;
+		}
+		if ($this->endTime == 0) {
+			return time() - $this->startTime;
+		}
+		return $this->endTime - $this->startTime;
 	}
 }
