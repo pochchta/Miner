@@ -18,12 +18,6 @@ class RecordWriter
 		foreach ($collection as $key => $record) {
 			$row = $record->getPropArray();
 			$row['number'] = $key + 1;
-			if (! isset($row['level'])) {
-				$row['level'] = $row['width'].'x'.$row['height'].'x'.$row['numberBombs'].' (ШхВхБ)';
-			}
-			foreach ($table[0] as $name => $value) {
-				if (! isset($row[$name])) $row[$name] = '&nbsp;';
-			}
 			$table[] = $row;
 		}
 		print '<div class="table">';
