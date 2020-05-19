@@ -38,15 +38,14 @@ class MinerWriter
 	}
 	public static function printTimeGame(Miner $miner)
 	{
-		if ($miner->getTimeStamp() == 0) {
+		if ($miner->getTime() == 0) {
 			print '0';
 			return;
 		}
-		$timeGame = time() - $miner->getTimeStamp();
-		if ($timeGame > self::MAX_TIME_GAME) {
+		if ($miner->getTime() > self::MAX_TIME_GAME) {
 			print self::MAX_TIME_GAME;
 			return;
 		}
-		print $timeGame;
+		print $miner->getTime();
 	}
 }
