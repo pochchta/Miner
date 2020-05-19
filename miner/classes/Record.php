@@ -5,26 +5,23 @@ namespace miner\classes;
 class Record
 {
 	private $name;
-	private $width;
-	private $height;
-	private $numberBombs;
+	private $level;
 	private $counterHelp;
+	private $time;
 	public function __construct($settings)
 	{
 		$this->name = $settings['name'];
-		$this->width = $settings['width'];
-		$this->height = $settings['height'];
-		$this->numberBombs = $settings['numberBombs'];
+		$this->level = $settings['level'];
 		$this->counterHelp = $settings['counterHelp'];
+		$this->time = $settings['time'];
 	}
 	public function getPropArray()
 	{
 		return array(
 			'name' => $this->name,
-			'width' => $this->width,
-			'height' => $this->height,
-			'numberBombs' => $this->numberBombs,
-			'counterHelp' => $this->counterHelp
+			'level' => $this->level,
+			'counterHelp' => $this->counterHelp,
+			'time' => $this->time,
 		);
 	}
 }
