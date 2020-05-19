@@ -10,13 +10,14 @@ class Settings
 	const MAX_HEIGHT = 16;
 	const MIN_NUMBER_BOMBS = 0;
 	const MAX_NUMBER_BOMBS = 100;
-	const MIN_CELL_SIZE = 1;
-	const MAX_CELL_SIZE = 100;
 	const MAX_NAME_LEN = 30;
+	const LEVEL1 = '10x10x10';	// WxHxB
+	const LEVEL2 = '16x16x40';
+	const LEVEL3 = '30x16x100';
 	private $width = 10;
 	private $height = 10;
 	private $numberBombs = 10;
-	private $cellSize = 15;
+	private $level = self::LEVEL1;
 	private $name = 'unknown';
 	public function setSettings(array $settings = array())
 	{
@@ -26,10 +27,16 @@ class Settings
 				$this->width = $settings['width'];
 				$this->height = $settings['height'];
 				$this->numberBombs = $settings['numberBombs'];
-			}
-			if (isset($settings['cellSize'])) {
-				$this->filterSizeSettings($settings);
-				$this->cellSize = $settings['cellSize'];
+				$settingsLevel = $this->width.'x'.$this->height.'x'.$this->numberBombs;
+				switch ($settingsLevel) {
+					case LEVEL1: $this->level = 1;
+					break;
+					case LEVEL2: $this->level = 2;
+					break;
+					case LEVEL3: $this->level = 3;
+					break;
+					default: $this->level = $settingsLevel;
+				}
 			}
 			if (isset($settings['name'])) {
 				$this->filterNameSettings($settings);
@@ -57,17 +64,6 @@ class Settings
 		}		
 		throw new \Exception('Недопустимые параметры поля');
 	}
-	private function filterSizeSettings(array $settings)
-	{
-		$s = (int)$settings['cellSize'];
-		if (
-			$s >= self::MIN_CELL_SIZE &&
-			$s <= self::MAX_CELL_SIZE
-		) {
-			return;
-		}
-		throw new \Exception('Недопустимые размеры ячеек поля');
-	}
 	private function filterNameSettings(array $settings)
 	{
 		if (strlen($settings['name']) > self::MAX_NAME_LEN) {
@@ -80,7 +76,7 @@ class Settings
 			'width' => $this->width,
 			'height' => $this->height,
 			'numberBombs' => $this->numberBombs,
-			'cellSize' => $this->cellSize,
+			'level' => $this->level,
 			'name' => $this->name
 		);
 	}
