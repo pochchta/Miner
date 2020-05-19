@@ -11,7 +11,7 @@ class RecordWriter
 		$table[] = array(
 			'number' => '№',
 			'name' => 'Имя',
-			'level' => 'Сложность',
+			'level' => 'Сложность (ШхВхБ)',
 			'counterHelp' => 'Помощь',
 			'time' => 'Время'
 		);

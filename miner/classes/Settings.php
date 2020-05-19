@@ -27,16 +27,7 @@ class Settings
 				$this->width = $settings['width'];
 				$this->height = $settings['height'];
 				$this->numberBombs = $settings['numberBombs'];
-				$settingsLevel = $this->width.'x'.$this->height.'x'.$this->numberBombs;
-				switch ($settingsLevel) {
-					case LEVEL1: $this->level = 1;
-					break;
-					case LEVEL2: $this->level = 2;
-					break;
-					case LEVEL3: $this->level = 3;
-					break;
-					default: $this->level = $settingsLevel;
-				}
+				$this->level = $this->width.'x'.$this->height.'x'.$this->numberBombs;
 			}
 			if (isset($settings['name'])) {
 				$this->filterNameSettings($settings);
@@ -79,5 +70,14 @@ class Settings
 			'level' => $this->level,
 			'name' => $this->name
 		);
+	}
+	public function getLevel()
+	{
+		switch ($this->level) {
+			case self::LEVEL1: return 1;
+			case self::LEVEL2: return 2;
+			case self::LEVEL3: return 3;
+		}
+		return 0;
 	}
 }

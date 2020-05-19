@@ -9,6 +9,9 @@ button {
 *:focus {
 	outline: none;
 }
+body{
+	opacity: 0;
+}
 
 .button10 {
   display: inline-block;
@@ -85,7 +88,7 @@ button {
 	justify-content: space-between;
 	width: 333px;
 	margin-bottom: 10px;
-	opacity: 0;
+	/*opacity: 0;*/
 }
 .digitalBlock .electronic{
 	font-family: Electronica-Normal;

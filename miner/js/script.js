@@ -30,7 +30,7 @@ if ((counterVisibleCell && counterNotVisibleCell) != false) {
 }
 idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - counterBombCell, 3);
 idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
-digitalBlock.style = "opacity: 1";
+// digitalBlock.style = "opacity: 1";
 
 let newGame = document.querySelectorAll(".newGame");
 newGame[0].onclick = function() {
@@ -38,3 +38,7 @@ newGame[0].onclick = function() {
 	document.forms["formClickField"].submit();
 	clearImageField();
 }
+
+if (level != 0) setLevel(level);
+
+document.body.style = "opacity: 1";

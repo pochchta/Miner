@@ -95,10 +95,9 @@ class MinerController
 				$h < $arraySettings['height']
 			) {
 				$miner = self::getMiner();
-				$miner->isBomb((int)$h, (int)$w, $help);
+				$miner->isBomb($h, $w, $help);
 			}
 		}
-		return false;
 	}
 	public static function getField()
 	{

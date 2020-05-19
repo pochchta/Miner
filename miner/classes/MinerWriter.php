@@ -7,7 +7,6 @@ class MinerWriter
 	const MAX_TIME_GAME = 999;
 	public static function printField(Miner $miner)
 	{
-
 		print '<div class=field>';
 		foreach ($miner->getField() as $h => $row) {
 			print '<div class=row>';

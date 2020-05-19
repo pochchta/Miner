@@ -3,6 +3,7 @@
 namespace miner\classes;
 
 $settings = MinerController::getSettings()->getArraySettings();
+$level = MinerController::getSettings()->getLevel();
 $miner = MinerController::getMiner();
 $rm = new RecordMapper();
 $coll = $rm->findAll(0, 10);
@@ -16,6 +17,9 @@ $coll = $rm->findAll(0, 10);
     <link href="/miner/css/style.css" type="text/css" rel="stylesheet"/>
     <script src="/miner/js/lib.js" defer></script>
     <script src="/miner/js/script.js" defer></script>
+    <script>
+    	let level = <?php print $level ?>;
+	</script>
 </head>
 <body>
 	<div class="digitalBlock" id="digitalBlock">
