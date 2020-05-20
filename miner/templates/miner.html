@@ -3,10 +3,14 @@
 namespace miner\classes;
 
 $settings = MinerController::getSettings()->getArraySettings();
-$level = MinerController::getSettings()->getLevel();
+$numberLevel = MinerController::getSettings()->getNumberLevel();
 $miner = MinerController::getMiner();
-$rm = new RecordMapper();
-$coll = $rm->findAll($settings['level'], 0, 10);
+try {
+	$rm = new RecordMapper();
+	$coll = $rm->findAll($settings['level'], 0, 10);
+} catch (\Exception $e) {
+	$coll = array();
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,7 +22,7 @@ $coll = $rm->findAll($settings['level'], 0, 10);
     <script src="/miner/js/lib.js" defer></script>
     <script src="/miner/js/script.js" defer></script>
     <script>
-    	let level = <?php print $level ?>;
+    	let level = <?php print $numberLevel ?>;
 	</script>
 </head>
 <body>
@@ -37,10 +41,10 @@ $coll = $rm->findAll($settings['level'], 0, 10);
 	<div class="info">
 		<form action="/" method="POST" id=formSettings class="settings">
 			<div class="level">
-				<div class="button10" onClick="setLevel(1)">0+</div>
-				<div class="button10" onClick="setLevel(2)">12+</div>
-				<div class="button10" onClick="setLevel(3)">18+</div>
-				<div class="button10" onClick="setLevel(0)">Свои</div>
+				<div class="button10" id="numberLevel1" onClick="setLevel(1)">0+</div>
+				<div class="button10" id="numberLevel2" onClick="setLevel(2)">12+</div>
+				<div class="button10" id="numberLevel3" onClick="setLevel(3)">18+</div>
+				<div class="button10" id="numberLevel0" onClick="setLevel(0)">Свои</div>
 			</div>
 			<?php
 				$names = array(

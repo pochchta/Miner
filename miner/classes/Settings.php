@@ -71,7 +71,7 @@ class Settings
 			'name' => $this->name
 		);
 	}
-	public function getLevel()
+	public function getNumberLevel()
 	{
 		switch ($this->level) {
 			case self::LEVEL1: return 1;

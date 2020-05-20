@@ -29,9 +29,9 @@ MinerController::clearMessages();
 MinerController::saveMinerToSession();
 
 //---------------------------------------------------
-function v($test)
-{
-	print "<pre>";
-	var_dump($test);
-	print "</pre>";
-}
+// function v($test)
+// {
+// 	print "<pre>";
+// 	var_dump($test);
+// 	print "</pre>";
+// }

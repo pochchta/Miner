@@ -31,7 +31,6 @@ class RecordMapper
 		}
 		$stmt->bindValue(2, $start, PDO::PARAM_INT);
 		$stmt->bindValue(3, $limit, PDO::PARAM_INT);
-
 		$stmt->execute();
 		$collection = $stmt->fetchAll(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'miner\classes\Record', [array()]);
 		return $collection;

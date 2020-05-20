@@ -110,6 +110,7 @@ function incTimer()
 }
 function setLevel(level)
 {
+	setButtonView(level);
 	switch (level) {
 		case 1:
 		setSettings(10, 10, 10, true);
@@ -135,7 +136,7 @@ function setSettings(h, w, b, ro)
 		document.forms["formSettings"].numberBombs.readOnly = true;
 		document.forms["formSettings"].height.style = "opacity: 0.6";
 		document.forms["formSettings"].width.style = "opacity: 0.6";
-		document.forms["formSettings"].numberBombs.style = "opacity: 0.6";	
+		document.forms["formSettings"].numberBombs.style = "opacity: 0.6";
 	} else {
 		document.forms["formSettings"].height.readOnly = false;
 		document.forms["formSettings"].width.readOnly = false;
@@ -144,4 +145,13 @@ function setSettings(h, w, b, ro)
 		document.forms["formSettings"].width.style = "opacity: 1";
 		document.forms["formSettings"].numberBombs.style = "opacity: 1";
 	}
+}
+function setButtonView(level)
+{
+	numberLevel0.style = 'opacity: 0.8';
+	numberLevel1.style = 'opacity: 0.8';
+	numberLevel2.style = 'opacity: 0.8';
+	numberLevel3.style = 'opacity: 0.8';
+	buttonLevel = document.getElementById('numberLevel' + level);
+	buttonLevel.style = 'opacity: 1';
 }

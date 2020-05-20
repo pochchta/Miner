@@ -40,5 +40,7 @@ newGame[0].onclick = function() {
 }
 
 if (level != 0) setLevel(level);
+setButtonView(level);
+
 
 document.body.style = "opacity: 1";
