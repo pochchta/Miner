@@ -58,7 +58,7 @@ class Miner
 	}
 	public function isBomb($h, $w, $help = false)
 	{
-		if ($this->isEndGame() == false) {
+		if ($this->isEndGame() == false) {									// обработка изменений поля
 			$settings = $this->settings;
 			$cell = $this->field[$h][$w];
 			while (
@@ -71,16 +71,18 @@ class Miner
 			if ($this->startTime == 0) {
 				$this->startTime = time();
 			}
-			if ($help) $this->counterHelp++;
-			if (($cell instanceof BombCell) && ($help == false)) {					// неудачное разминирование
+			if ($help) {
+				$this->counterHelp++;
+			}
+			if (($cell instanceof BombCell) && ($help == false)) {				// неудачное разминирование
 				$cell->exploded = true;
 				$this->endGame = true;
 				$this->messages[] = self::MESSAGE_LOSE_GAME;
 			}
 			if ($this->isEndGame() == false) {									// удачное разминирование
-				if (($cell instanceof Cell) && ($cell->visible == false)) {
+				if (($cell instanceof Cell) && ($cell->isVisible() == false)) {
 					$this->startGame = true;
-					$cell->visible = true;
+					$cell->setVisible();
 					if ($cell instanceof EmptyCell) {
 						$this->countEmptyCell--;
 					}
@@ -89,7 +91,8 @@ class Miner
 				}
 			}
 		}
-		if ($this->countEmptyCell == 0 && $this->endGame == false) {
+
+		if ($this->countEmptyCell == 0 && $this->endGame == false) {	// обработка при выигрыше
 			$this->endGame = true;
 			$this->messages[] = self::MESSAGE_WIN_GAME." Помощь получена {$this->counterHelp} раз";
 			$record = new Record(
@@ -107,13 +110,14 @@ class Miner
 			} catch (\Exception $e) {
 
 			}
-		}		
-		if ($this->isEndGame() == true) {
+		}
+
+		if ($this->isEndGame() == true) {								// обработка при проигрыше
 			if ($this->endTime == 0) {
 				$this->endTime = time();
 			}
 			$this->messages[] = self::MESSAGE_END_GAME;
-		}	
+		}
 	}
 	private function openBesideCell($h, $w)
 	{
@@ -124,9 +128,9 @@ class Miner
 				if (
 					isset($this->field[$hNew][$wNew]) &&
 					$this->field[$hNew][$wNew] instanceof EmptyCell &&
-					$this->field[$hNew][$wNew]->visible == false
+					$this->field[$hNew][$wNew]->isVisible() == false
 				) {
-					$this->field[$hNew][$wNew]->visible = true;
+					$this->field[$hNew][$wNew]->setVisible();
 					$this->countEmptyCell--;
 					if ($this->field[$hNew][$wNew]->countBombAround == 0) {
 						$this->openBesideCell($hNew, $wNew);

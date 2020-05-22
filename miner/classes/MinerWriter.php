@@ -13,7 +13,7 @@ class MinerWriter
 			foreach ($row as $w => $cell) {
 				$class = 'cell ';
 				if ($cell instanceof Cell) {
-					if ($cell->visible == false && $miner->isEndGame() == false) {
+					if ($cell->isVisible() == false && $miner->isEndGame() == false) {
 						$class .= 'notVisible';
 					} elseif ($cell instanceof BombCell) {
 						if ($cell->exploded) {
@@ -46,5 +46,40 @@ class MinerWriter
 			return;
 		}
 		print $miner->getTime();
+	}
+	public static function printJsonField(Miner $miner)
+	{
+		$output = array();
+		foreach ($miner->getField() as $h => $row) {
+			foreach ($row as $w => $cell) {
+				$class = 'cell ';
+				if ($cell instanceof Cell && $cell->isUpdate()) {
+					$cell->checkUpdate();
+					if ($cell->isVisible() == false && $miner->isEndGame() == false) {
+						$class .= 'notVisible';
+					} elseif ($cell instanceof BombCell) {
+						if ($cell->exploded) {
+							$class .= 'explodedBomb';
+						} else {
+							$class .= 'bomb';
+						}
+					} elseif ($cell instanceof EmptyCell) {
+						if ($cell->countBombAround > 0) {
+							$class .= 'numberBombs';
+						} else {
+							$class .= 'notBomb';
+						}
+					} 
+					$output[] = array(
+						"_{$h}_{$w}" => array(
+							'class' => "{$class}",
+							'value' => "{$cell}"
+						)
+					);
+				}
+			}
+		}
+		v($output);
+		// return json_encode($output);
 	}
 }
