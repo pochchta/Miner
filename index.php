@@ -18,20 +18,26 @@ MinerController::loadSettingsFromCookie();
 MinerController::loadMinerFromSession();
 if (isset($_POST['setSettings'])) {
 	MinerController::setSettings($_POST);
-} elseif (! empty($_POST['newGame'])) {
+}
+if (! empty($_POST['newGame'])) {
 	MinerController::newMiner();
 	MinerController::setSettingsToCookie();
-} elseif (! empty($_POST['coord'])) {
-	MinerController::isBomb($_POST['coord']);
 }
-include(__DIR__.'/miner/templates/miner.html');
+if (! empty($_POST['coord'])) {
+	MinerController::isBomb($_POST['coord']);
+	MinerWriter::printJsonField(MinerController::getMiner());
+} else {
+	include(__DIR__.'/miner/templates/miner.html');
+}
 MinerController::clearMessages();
 MinerController::saveMinerToSession();
 
-//---------------------------------------------------
+// ---------------------------------------------------
 // function v($test)
 // {
 // 	print "<pre>";
 // 	var_dump($test);
 // 	print "</pre>";
 // }
+
+// v(MinerController::getMiner());

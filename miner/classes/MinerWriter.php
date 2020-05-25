@@ -79,7 +79,6 @@ class MinerWriter
 				}
 			}
 		}
-		v($output);
-		// return json_encode($output);
+		print json_encode($output);
 	}
 }

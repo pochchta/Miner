@@ -5,6 +5,36 @@ const CLASS_NOT_VISIBLE = "cell notVisible";
 const CLASS_BOMB = "cell bomb";
 const CLASS_EXPLODED_BOMB = "cell explodedBomb";
 
+function sendCellCommand(command)
+{
+	fetch('http://miner/', {  
+		method: 'post',  
+		headers: {  
+			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
+		},  
+		body: 'coord=' + command
+	})
+	.then(  
+		function(response) {  
+			if (response.status !== 200) {
+				console.log('Looks like there was a problem. Status Code: ' +  
+					response.status);  
+				return;  
+			}
+
+			response.json().then(function(data) { 
+				if (Array.isArray(data)) {
+					console.log(data);
+				}
+				// console.log(data);
+				// document.write(data);
+			});
+		})
+	.catch(function(err) {  
+		console.log('Fetch Error :-S', err);  
+	});
+}
+
 function showImageCell(elements)
 {
 	for (var i = 0; i < elements.length; i++) {
@@ -31,11 +61,9 @@ function leftClickCell(item)
 	if (item.className == CLASS_NOT_VISIBLE) {
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
-			document.forms["formClickField"].coord.value = "test" + item.id;
-			document.forms["formClickField"].submit();
+			sendCellCommand("test" + item.id);
 		} else if (cellView == QUESTION) {
-			document.forms["formClickField"].coord.value = "help" + item.id;
-			document.forms["formClickField"].submit();
+			sendCellCommand("help" + item.id);
 		}
 	}		
 }
