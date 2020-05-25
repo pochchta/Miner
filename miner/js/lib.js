@@ -5,33 +5,45 @@ const CLASS_NOT_VISIBLE = "cell notVisible";
 const CLASS_BOMB = "cell bomb";
 const CLASS_EXPLODED_BOMB = "cell explodedBomb";
 
-function sendCellCommand(command)
+function sendCellCommand(request)
 {
-	fetch('http://miner/', {  
-		method: 'post',  
-		headers: {  
-			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
-		},  
-		body: 'coord=' + command
+	fetch('http://miner/', {
+		method: 'post',
+		headers: {
+			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+		},
+		credentials: 'same-origin',
+		body: request
 	})
-	.then(  
-		function(response) {  
+	.then(
+		function(response) {
 			if (response.status !== 200) {
-				console.log('Looks like there was a problem. Status Code: ' +  
-					response.status);  
-				return;  
+				console.log('Looks like there was a problem. Status Code: ' + response.status);
+				return;
 			}
-
-			response.json().then(function(data) { 
+			response.json().then(function(data) {
 				if (Array.isArray(data)) {
-					console.log(data);
+					for (var i = 0; i < data.length; i++) {
+						if (elemCell = document.getElementById(data[i]['id'])){
+							elemCell.innerHTML = data[i].value;
+							elemCell.className = data[i].class;
+							showImageCell([elemCell]);
+						}
+						if (typeof data[i]['startGame'] != 'undefined') {
+							if (data[i]['startGame'] === true && data[i]['endGame'] === false) {
+								if (typeof intervalIdGlob == 'undefined') {
+									intervalIdGlob = setInterval(incTimer, 1000);
+								}
+							} else {
+								clearInterval(intervalIdGlob);
+							}
+						}
+					}
 				}
-				// console.log(data);
-				// document.write(data);
 			});
 		})
-	.catch(function(err) {  
-		console.log('Fetch Error :-S', err);  
+	.catch(function(err) {
+		console.log('Fetch Error :-S', err);
 	});
 }
 
@@ -61,9 +73,9 @@ function leftClickCell(item)
 	if (item.className == CLASS_NOT_VISIBLE) {
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
-			sendCellCommand("test" + item.id);
+			sendCellCommand("coord=test" + item.id);
 		} else if (cellView == QUESTION) {
-			sendCellCommand("help" + item.id);
+			sendCellCommand("coord=help" + item.id);
 		}
 	}		
 }

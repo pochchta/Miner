@@ -2,7 +2,8 @@ let elements = document.querySelectorAll(".cell");
 showImageCell(elements);
 let counterBombCell = 0, 
 counterVisibleCell = 0,
-counterNotVisibleCell = 0;
+counterNotVisibleCell = 0,
+intervalIdGlob;
 for (var i = 0; i < elements.length; i++) {
 	elements[i].onclick = function() {
 		leftClickCell(this);
@@ -26,11 +27,10 @@ for (var i = 0; i < elements.length; i++) {
 	}
 }
 if ((counterVisibleCell && counterNotVisibleCell) != false) {
-	setInterval(incTimer, 1000);
+	intervalIdGlob = setInterval(incTimer, 1000);
 }
 idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - counterBombCell, 3);
 idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
-// digitalBlock.style = "opacity: 1";
 
 let newGame = document.querySelectorAll(".newGame");
 newGame[0].onclick = function() {
@@ -41,6 +41,5 @@ newGame[0].onclick = function() {
 
 if (level != 0) setLevel(level);
 setButtonView(level);
-
 
 document.body.style = "opacity: 1";

@@ -11,25 +11,8 @@ class MinerWriter
 		foreach ($miner->getField() as $h => $row) {
 			print '<div class=row>';
 			foreach ($row as $w => $cell) {
-				$class = 'cell ';
-				if ($cell instanceof Cell) {
-					if ($cell->isVisible() == false && $miner->isEndGame() == false) {
-						$class .= 'notVisible';
-					} elseif ($cell instanceof BombCell) {
-						if ($cell->exploded) {
-							$class .= 'explodedBomb';
-						} else {
-							$class .= 'bomb';
-						}
-					} elseif ($cell instanceof EmptyCell) {
-						if ($cell->countBombAround > 0) {
-							$class .= 'numberBombs';
-						} else {
-							$class .= 'notBomb';
-						}
-					} 
-					print "<div class='{$class}' id='_{$h}_{$w}'>$cell</div>";
-				}
+				$class = self::elemCellClass($cell, $miner);				
+				print "<div class='{$class}' id='_{$h}_{$w}'>$cell</div>";
 			}
 			print '</div>';
 		}
@@ -52,33 +35,44 @@ class MinerWriter
 		$output = array();
 		foreach ($miner->getField() as $h => $row) {
 			foreach ($row as $w => $cell) {
-				$class = 'cell ';
-				if ($cell instanceof Cell && $cell->isUpdate()) {
+				if (
+					$cell instanceof Cell && 
+					($cell->isUpdate() || $miner->isEndGame())
+				) {
+					$class = self::elemCellClass($cell, $miner);				
 					$cell->checkUpdate();
-					if ($cell->isVisible() == false && $miner->isEndGame() == false) {
-						$class .= 'notVisible';
-					} elseif ($cell instanceof BombCell) {
-						if ($cell->exploded) {
-							$class .= 'explodedBomb';
-						} else {
-							$class .= 'bomb';
-						}
-					} elseif ($cell instanceof EmptyCell) {
-						if ($cell->countBombAround > 0) {
-							$class .= 'numberBombs';
-						} else {
-							$class .= 'notBomb';
-						}
-					} 
 					$output[] = array(
-						"_{$h}_{$w}" => array(
-							'class' => "{$class}",
-							'value' => "{$cell}"
-						)
+						'id' => "_{$h}_{$w}",
+						'class' => "{$class}",
+						'value' => "{$cell}"
 					);
 				}
 			}
 		}
+		$output[] = array(
+			'startGame' => $miner->isStartGame(),
+			'endGame' => $miner->isEndGame(),
+		);
 		print json_encode($output);
+	}
+	private static function elemCellClass(Cell $cell, Miner $miner)
+	{
+		$class = 'cell ';
+		if ($cell->isVisible() == false && $miner->isEndGame() == false) {
+			$class .= 'notVisible';
+		} elseif ($cell instanceof BombCell) {
+			if ($cell->exploded) {
+				$class .= 'explodedBomb';
+			} else {
+				$class .= 'bomb';
+			}
+		} elseif ($cell instanceof EmptyCell) {
+			if ($cell->countBombAround > 0) {
+				$class .= 'numberBombs';
+			} else {
+				$class .= 'notBomb';
+			}
+		} 
+		return $class;
 	}
 }

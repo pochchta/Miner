@@ -156,6 +156,10 @@ class Miner
 	{
 		return $this->endGame;
 	}
+	public function isStartGame()
+	{
+		return $this->startGame;
+	}
 	public function getSettings()
 	{
 		return $this->settings;
