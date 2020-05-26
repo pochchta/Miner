@@ -5,7 +5,7 @@ const CLASS_NOT_VISIBLE = "cell notVisible";
 const CLASS_BOMB = "cell bomb";
 const CLASS_EXPLODED_BOMB = "cell explodedBomb";
 
-function sendCellCommand(request)
+function sendCellCommand(request, funcProcessing)
 {
 	fetch('http://miner/', {
 		method: 'post',
@@ -21,30 +21,40 @@ function sendCellCommand(request)
 				console.log('Looks like there was a problem. Status Code: ' + response.status);
 				return;
 			}
-			response.json().then(function(data) {
-				if (Array.isArray(data)) {
-					for (var i = 0; i < data.length; i++) {
-						if (elemCell = document.getElementById(data[i]['id'])){
-							elemCell.innerHTML = data[i].value;
-							elemCell.className = data[i].class;
-							showImageCell([elemCell]);
-						}
-						if (typeof data[i]['startGame'] != 'undefined') {
-							if (data[i]['startGame'] === true && data[i]['endGame'] === false) {
-								if (typeof intervalIdGlob == 'undefined') {
-									intervalIdGlob = setInterval(incTimer, 1000);
-								}
-							} else {
-								clearInterval(intervalIdGlob);
-							}
-						}
-					}
-				}
-			});
+			response.json().then(funcProcessing);
 		})
 	.catch(function(err) {
 		console.log('Fetch Error :-S', err);
 	});
+}
+
+function dataFieldProcessing(data)
+{
+	if (Array.isArray(data)) {
+		dataTimeProcessing(data);
+		for (var i = 0; i < data.length; i++) {
+			if (elemCell = document.getElementById(data[i]['id'])){
+				elemCell.innerHTML = data[i].value;
+				elemCell.className = data[i].class;
+				showImageCell([elemCell]);
+			}
+		}
+	}
+}
+
+function dataTimeProcessing(data)
+{
+	if (Array.isArray(data)) {
+		elemTimer = document.getElementById('idTimer');
+		elemTimer.innerHTML = formatNumber(data[0]['timeGame']);
+		if (data[0]['startGame'] === true && data[0]['endGame'] === false) {
+			if (typeof intervalIdGlob == 'undefined') {
+				intervalIdGlob = setInterval(incTimer, 1000);
+			}
+		} else {
+			clearInterval(intervalIdGlob);
+		}
+	}
 }
 
 function showImageCell(elements)
@@ -73,9 +83,9 @@ function leftClickCell(item)
 	if (item.className == CLASS_NOT_VISIBLE) {
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
-			sendCellCommand("coord=test" + item.id);
+			sendCellCommand("coord=test" + item.id, dataFieldProcessing);
 		} else if (cellView == QUESTION) {
-			sendCellCommand("coord=help" + item.id);
+			sendCellCommand("coord=help" + item.id, dataFieldProcessing);
 		}
 	}		
 }
@@ -99,36 +109,6 @@ function clearImageField()
 {
 	localStorage.clear();
 }
-function saveSettings()
-{
-	let settings = {
-		width: document.forms["formSettings"].width.value,
-		height: document.forms["formSettings"].height.value,
-		numberBombs: document.forms["formSettings"].numberBombs.value
-	}
-	if (
-		settings.width !== "" &&
-		settings.height !== "" &&
-		settings.numberBombs !== ""
-	) {	
-		localStorage.setItem("settings", JSON.stringify(settings));
-	}
-}
-function loadSettings()
-{
-	settings = JSON.parse(localStorage.getItem("settings"));
-	if (
-		settings !== null &&
-		settings.hasOwnProperty("width") &&
-		settings.hasOwnProperty("height") &&
-		settings.hasOwnProperty("numberBombs")
-	) {
-		document.forms["formSettings"].width.value = settings.width;
-		document.forms["formSettings"].height.value = settings.height;
-		document.forms["formSettings"].numberBombs.value = settings.numberBombs;
-		return settings;
-	}
-}
 function formatNumber(number, numberDigits)
 {
 	sign = '';
@@ -144,8 +124,9 @@ function formatNumber(number, numberDigits)
 }
 function incTimer()
 {
-	if (idTimer.innerHTML < 999) {
-		idTimer.innerHTML = formatNumber(+idTimer.innerHTML + 1, 3);
+	elemTimer = document.getElementById('idTimer');
+	if (elemTimer.innerHTML < 999) {
+		elemTimer.innerHTML = formatNumber(+elemTimer.innerHTML + 1, 3);
 	}
 }
 function setLevel(level)
