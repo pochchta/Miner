@@ -29,14 +29,13 @@ try {
 </head>
 <body>
 	<div class="digitalBlock" id="digitalBlock">
-		<div id="idCounterBomb" class="electronic"><?php print $miner->getSettings()['numberBombs']?></div>
+		<div id="idCounterBomb" class="electronic"></div>
 		<button name="newGame" class="newGame button10">New Game</button>
-		<div id="idTimer" class="electronic"><?php MinerWriter::printTimeGame($miner); ?></div>
+		<div id="idTimer" class="electronic"></div>
 	</div>
 
 	<?php MinerWriter::printField($miner); ?>
 	<form action="/" method="POST" id="formClickField">
-		<input type="hidden" name="coord">
 		<input type="hidden" name="newGame">
 	</form>
 

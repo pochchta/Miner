@@ -31,7 +31,7 @@ function sendCellCommand(request, funcProcessing)
 function dataFieldProcessing(data)
 {
 	if (Array.isArray(data)) {
-		dataTimeProcessing(data);
+		dataStateProcessing(data);
 		for (var i = 0; i < data.length; i++) {
 			if (elemCell = document.getElementById(data[i]['id'])){
 				elemCell.innerHTML = data[i].value;
@@ -42,7 +42,7 @@ function dataFieldProcessing(data)
 	}
 }
 
-function dataTimeProcessing(data)
+function dataStateProcessing(data)
 {
 	if (Array.isArray(data)) {
 		if (startTimeGlob != data[0]['startTime']) {
@@ -60,6 +60,14 @@ function dataTimeProcessing(data)
 		} else {
 			clearInterval(intervalIdGlob);
 		}
+		if (countRemainingBombGlob != data[0]['countRemainingBomb']) {
+			countRemainingBombGlob = data[0]['countRemainingBomb'];
+			setCountBomb();
+		}
+		if (data[0]['startGame'] === false) {
+			clearImageField();
+			setCountBomb();
+		}
 	}
 }
 
@@ -71,6 +79,7 @@ function showImageCell(elements)
 		if (item.className != CLASS_NOT_VISIBLE) {
 			if (cellView != null && cellView != DEFAULT) {
 				localStorage.setItem(item.id, DEFAULT);
+				setCounterMarkCell(getCounterMarkCell() - 1);
 			}
 		}
 		cellView = localStorage.getItem(item.id);
@@ -83,6 +92,7 @@ function showImageCell(elements)
 			item.style = "background-image: url('/miner/images/questionTransp128.gif')," + defaultImageUrl;
 		}
 	}
+	setCountBomb();
 }
 function leftClickCell(item)
 {
@@ -101,19 +111,21 @@ function rightClickCell(item)
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
 			localStorage.setItem(item.id, FLAG);
-			idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - 1, 3);
+			setCounterMarkCell(getCounterMarkCell() + 1);
+			setCountBomb();
 		} else if (cellView == FLAG) {
 			localStorage.setItem(item.id, QUESTION);
 		} else if (cellView == QUESTION) {
 			localStorage.setItem(item.id, DEFAULT);
-			idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML + 1, 3);
+			setCounterMarkCell(getCounterMarkCell() - 1);
+			setCountBomb();
 		}
 		showImageCell([item]);
 	}
 }
 function clearImageField()
 {
-	counterMarkCell = 0;
+	setCounterMarkCell(0);
 	localStorage.clear();
 }
 function formatNumber(number, numberDigits)
@@ -145,6 +157,22 @@ function setTimer()
 	} else {
 		elemTimer.innerHTML = formatNumber(time, 3);
 	}
+}
+function setCountBomb()
+{
+	elemCounterBomb = document.getElementById('idCounterBomb');
+	elemCounterBomb.innerHTML = formatNumber(+countRemainingBombGlob - getCounterMarkCell(), 3);
+}
+function getCounterMarkCell()
+{
+	if (typeof localStorage.getItem('counterMarkCell') == 'undefined') {
+		localStorage.getItem('counterMarkCell') = 0;
+	}
+	return Number(localStorage.getItem('counterMarkCell'));
+}
+function setCounterMarkCell(value)
+{
+	localStorage.setItem('counterMarkCell', Number(value));
 }
 function setLevel(level)
 {
