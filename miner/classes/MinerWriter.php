@@ -32,6 +32,30 @@ class MinerWriter
 	}
 	public static function printJsonField(Miner $miner)
 	{
+		$output[0] = self::getStateGame($miner);
+		$output = array_merge(
+			$output,
+			self::getUpdateCell($miner)
+		);
+		print json_encode($output);
+	}
+	public static function printJsonState(Miner $miner)
+	{
+		$output[0] = self::getStateGame($miner);
+		print json_encode($output);
+	}
+	private static function getStateGame(Miner $miner)
+	{
+		$output = array(
+			'startGame' => $miner->isStartGame(),
+			'endGame' => $miner->isEndGame(),
+			'startTime' => $miner->getStartTime(),
+			'endTime' => $miner->getEndTime()
+		);
+		return $output;
+	}
+	private static function getUpdateCell(Miner $miner)
+	{
 		$output = array();
 		foreach ($miner->getField() as $h => $row) {
 			foreach ($row as $w => $cell) {
@@ -49,11 +73,7 @@ class MinerWriter
 				}
 			}
 		}
-		$output[] = array(
-			'startGame' => $miner->isStartGame(),
-			'endGame' => $miner->isEndGame(),
-		);
-		print json_encode($output);
+		return $output;
 	}
 	private static function elemCellClass(Cell $cell, Miner $miner)
 	{
