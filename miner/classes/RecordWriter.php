@@ -32,4 +32,12 @@ class RecordWriter
 		}
 		print '</div>';
 	}
+	public static function printJsonRecord(Record $record = NULL)
+	{
+		$output = array();
+		if ($record != NULL){
+			$output = $record->getPropArray();
+		}
+		print json_encode($output);
+	}
 }
