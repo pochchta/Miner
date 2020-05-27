@@ -19,13 +19,6 @@ for (var i = 0; i < elements.length; i++) {
 	}
 }
 
-let newGame = document.querySelectorAll(".newGame");
-newGame[0].onclick = function() {
-	document.forms["formClickField"].newGame.value = 'newGame';
-	document.forms["formClickField"].submit();
-	clearImageField();
-}
-
 if (level != 0) setLevel(level);
 setButtonView(level);
 

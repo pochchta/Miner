@@ -19,11 +19,11 @@ MinerController::loadMinerFromSession();
 if (isset($_POST['setSettings'])) {
 	MinerController::setSettings($_POST);
 }
-if (! empty($_POST['newGame'])) {
+if ($_POST['newGame'] == 'ok') {
 	MinerController::newMiner();
 	MinerController::setSettingsToCookie();
-}
-if (! empty($_POST['coord'])) {
+	MinerWriter::printJsonField(MinerController::getMiner());
+} elseif (! empty($_POST['coord'])) {
 	MinerController::isBomb($_POST['coord']);
 	MinerWriter::printJsonField(MinerController::getMiner());
 } else {

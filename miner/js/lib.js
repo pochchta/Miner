@@ -59,6 +59,7 @@ function dataStateProcessing(data)
 			}
 		} else {
 			clearInterval(intervalIdGlob);
+			intervalIdGlob = undefined;
 		}
 		if (countRemainingBombGlob != data[0]['countRemainingBomb']) {
 			countRemainingBombGlob = data[0]['countRemainingBomb'];
@@ -94,6 +95,7 @@ function showImageCell(elements)
 	}
 	setCountBomb();
 }
+
 function leftClickCell(item)
 {
 	if (item.className == CLASS_NOT_VISIBLE) {
@@ -105,6 +107,7 @@ function leftClickCell(item)
 		}
 	}		
 }
+
 function rightClickCell(item)
 {
 	if (item.className == CLASS_NOT_VISIBLE) {
@@ -123,11 +126,18 @@ function rightClickCell(item)
 		showImageCell([item]);
 	}
 }
+
+function newGameClick()
+{
+	sendCellCommand("newGame=ok", dataFieldProcessing);
+}
+
 function clearImageField()
 {
 	setCounterMarkCell(0);
 	localStorage.clear();
 }
+
 function formatNumber(number, numberDigits)
 {
 	number = Math.round(number);
@@ -142,6 +152,7 @@ function formatNumber(number, numberDigits)
 	}
 	return sign + number;
 }
+
 function setTimer()
 {
 	elemTimer = document.getElementById('idTimer');
@@ -158,11 +169,13 @@ function setTimer()
 		elemTimer.innerHTML = formatNumber(time, 3);
 	}
 }
+
 function setCountBomb()
 {
 	elemCounterBomb = document.getElementById('idCounterBomb');
 	elemCounterBomb.innerHTML = formatNumber(+countRemainingBombGlob - getCounterMarkCell(), 3);
 }
+
 function getCounterMarkCell()
 {
 	if (typeof localStorage.getItem('counterMarkCell') == 'undefined') {
@@ -170,10 +183,12 @@ function getCounterMarkCell()
 	}
 	return Number(localStorage.getItem('counterMarkCell'));
 }
+
 function setCounterMarkCell(value)
 {
 	localStorage.setItem('counterMarkCell', Number(value));
 }
+
 function setLevel(level)
 {
 	setButtonView(level);
@@ -191,6 +206,7 @@ function setLevel(level)
 		setSettings(10, 10, 10, false);
 	}
 }
+
 function setSettings(h, w, b, ro)
 {
 	document.forms["formSettings"].height.value = h;
@@ -212,6 +228,7 @@ function setSettings(h, w, b, ro)
 		document.forms["formSettings"].numberBombs.style = "opacity: 1";
 	}
 }
+
 function setButtonView(level)
 {
 	numberLevel0.style = 'opacity: 0.8';

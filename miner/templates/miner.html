@@ -30,14 +30,11 @@ try {
 <body>
 	<div class="digitalBlock" id="digitalBlock">
 		<div id="idCounterBomb" class="electronic"></div>
-		<button name="newGame" class="newGame button10">New Game</button>
+		<button class="newGame button10" onClick="newGameClick()">New Game</button>
 		<div id="idTimer" class="electronic"></div>
 	</div>
 
 	<?php MinerWriter::printField($miner); ?>
-	<form action="/" method="POST" id="formClickField">
-		<input type="hidden" name="newGame">
-	</form>
 
 	<div class="info">
 		<form action="/" method="POST" id=formSettings class="settings">
