@@ -14,6 +14,7 @@ class Miner
 	private $counterHelp = 0;
 	private $startTime = 0;
 	private $endTime = 0;
+	private $record;
 	const MESSAGE_LOSE_GAME = 'Вы проиграли.';
 	const MESSAGE_WIN_GAME = 'Поздравляем. Вы победили.';
 	const MESSAGE_END_GAME = 'Игра закончена. Начните новую.';
@@ -100,7 +101,7 @@ class Miner
 		if ($this->countEmptyCell == 0 && $this->endGame == false) {	// обработка при выигрыше
 			$this->endGame = true;
 			$this->messages[] = self::MESSAGE_WIN_GAME." Помощь получена {$this->counterHelp} раз";
-			$record = new Record(
+			$this->record = new Record(
 				array_merge(
 					$this->settings,
 					array(
@@ -111,7 +112,7 @@ class Miner
 			);
 			$mapper = new RecordMapper();
 			try {
-				$mapper->insert($record);
+				$mapper->insert($this->record);
 			} catch (\Exception $e) {
 
 			}
@@ -190,5 +191,9 @@ class Miner
 	public function getCountRemainingBomb()
 	{
 		return $this->countRemainingBomb;
+	}
+	public function getRecord()
+	{
+		return $this->record;
 	}
 }
