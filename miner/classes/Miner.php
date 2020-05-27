@@ -174,4 +174,12 @@ class Miner
 		}
 		return $this->endTime - $this->startTime;
 	}
+	public function getStartTime()
+	{
+		return $this->startTime;
+	}
+	public function getEndTime()
+	{
+		return $this->endTime;
+	}
 }
