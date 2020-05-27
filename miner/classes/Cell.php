@@ -5,7 +5,7 @@ namespace miner\classes;
 abstract class Cell
 {
 	protected $visible = false;
-	private $update = false;
+	private $update = true;
 	public function setVisible()
 	{
 		$this->visible = true;
