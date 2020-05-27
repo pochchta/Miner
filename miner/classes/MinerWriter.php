@@ -50,7 +50,8 @@ class MinerWriter
 			'startGame' => $miner->isStartGame(),
 			'endGame' => $miner->isEndGame(),
 			'startTime' => $miner->getStartTime(),
-			'endTime' => $miner->getEndTime()
+			'endTime' => $miner->getEndTime(),
+			'countRemainingBomb' => $miner->getCountRemainingBomb(),
 		);
 		return $output;
 	}
