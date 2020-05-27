@@ -9,6 +9,7 @@ class Miner
 	private $endGame = false;
 	private $startGame = false;
 	private $countEmptyCell;
+	private $countRemainingBomb;
 	private $settings = array();
 	private $counterHelp = 0;
 	private $startTime = 0;
@@ -23,6 +24,7 @@ class Miner
 		$height = $this->settings['height'];
 		$numberBombs = $this->settings['numberBombs'];
 		$this->countEmptyCell = $width * $height - $numberBombs;
+		$this->countRemainingBomb = $numberBombs;
 		for ($h = 0; $h < $height; $h++){
 			for ($w = 0; $w < $width; $w++){
 				$this->field[$h][$w] = new EmptyCell();
@@ -86,6 +88,9 @@ class Miner
 					if ($cell instanceof EmptyCell) {
 						$this->countEmptyCell--;
 					}
+					if ($cell instanceof BombCell) {
+						$this->countRemainingBomb--;
+					}					
 					$this->openBesideCell($h, $w);
 					$this->messages[] = "Осталось разминировать {$this->countEmptyCell} клеток";
 				}
@@ -181,5 +186,9 @@ class Miner
 	public function getEndTime()
 	{
 		return $this->endTime;
+	}
+	public function getCountRemainingBomb()
+	{
+		return $this->countRemainingBomb;
 	}
 }
