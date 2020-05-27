@@ -45,11 +45,17 @@ function dataFieldProcessing(data)
 function dataTimeProcessing(data)
 {
 	if (Array.isArray(data)) {
-		elemTimer = document.getElementById('idTimer');
-		elemTimer.innerHTML = formatNumber(data[0]['timeGame']);
+		if (startTimeGlob != data[0]['startTime']) {
+			startTimeGlob = data[0]['startTime'];
+			setTimer();
+		}
+		if (endTimeGlob != data[0]['endTime']) {
+			endTimeGlob = data[0]['endTime'];
+			setTimer();
+		}		
 		if (data[0]['startGame'] === true && data[0]['endGame'] === false) {
 			if (typeof intervalIdGlob == 'undefined') {
-				intervalIdGlob = setInterval(incTimer, 1000);
+				intervalIdGlob = setInterval(setTimer, 1000);
 			}
 		} else {
 			clearInterval(intervalIdGlob);
@@ -107,10 +113,12 @@ function rightClickCell(item)
 }
 function clearImageField()
 {
+	counterMarkCell = 0;
 	localStorage.clear();
 }
 function formatNumber(number, numberDigits)
 {
+	number = Math.round(number);
 	sign = '';
 	if (number < 0) {
 		sign = '-';
@@ -122,11 +130,20 @@ function formatNumber(number, numberDigits)
 	}
 	return sign + number;
 }
-function incTimer()
+function setTimer()
 {
 	elemTimer = document.getElementById('idTimer');
-	if (elemTimer.innerHTML < 999) {
-		elemTimer.innerHTML = formatNumber(+elemTimer.innerHTML + 1, 3);
+	if (endTimeGlob < startTimeGlob) {
+		time = (new Date().getTime()/1000) - startTimeGlob;
+	} else {
+		time = endTimeGlob - startTimeGlob;
+	}
+	if (time < 0) {
+		elemTimer.innerHTML = formatNumber(0, 3);
+	} else if(time > 999) {
+		elemTimer.innerHTML = formatNumber(999, 3);
+	} else {
+		elemTimer.innerHTML = formatNumber(time, 3);
 	}
 }
 function setLevel(level)

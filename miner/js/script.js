@@ -1,9 +1,15 @@
 let elements = document.querySelectorAll(".cell");
 showImageCell(elements);
 let counterBombCell = 0, 
-counterVisibleCell = 0,
-counterNotVisibleCell = 0,
-intervalIdGlob;
+// counterVisibleCell = 0,
+// counterNotVisibleCell = 0,
+intervalIdGlob,
+startTimeGlob,
+endTimeGlob,
+counterMarkCell = 0;
+
+dataTimeProcessing(JSON.parse(jsonStateGame));
+
 for (var i = 0; i < elements.length; i++) {
 	elements[i].onclick = function() {
 		leftClickCell(this);
@@ -20,17 +26,17 @@ for (var i = 0; i < elements.length; i++) {
 	) {
 		counterBombCell++;
 	}
-	if (elements[i].className == CLASS_NOT_VISIBLE) {
-		counterNotVisibleCell++;
-	} else {
-		counterVisibleCell++;
-	}
+	// if (elements[i].className == CLASS_NOT_VISIBLE) {
+	// 	counterNotVisibleCell++;
+	// } else {
+	// 	counterVisibleCell++;
+	// }
 }
-if ((counterVisibleCell && counterNotVisibleCell) != false) {
-	intervalIdGlob = setInterval(incTimer, 1000);
-}
+// if ((counterVisibleCell && counterNotVisibleCell) != false) {
+// 	intervalIdGlob = setInterval(setTimer, 500);
+// }
 idCounterBomb.innerHTML = formatNumber(+idCounterBomb.innerHTML - counterBombCell, 3);
-idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
+// idTimer.innerHTML = formatNumber(idTimer.innerHTML, 3);
 
 let newGame = document.querySelectorAll(".newGame");
 newGame[0].onclick = function() {
