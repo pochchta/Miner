@@ -5,7 +5,7 @@ const CLASS_NOT_VISIBLE = "cell notVisible";
 const CLASS_BOMB = "cell bomb";
 const CLASS_EXPLODED_BOMB = "cell explodedBomb";
 
-function sendCellCommand(request, funcProcessing)
+function sendAsyncCommand(request, funcProcessing)
 {
 	fetch('http://miner/', {
 		method: 'post',
@@ -69,6 +69,60 @@ function dataStateProcessing(data)
 			clearImageField();
 			setCountBomb();
 		}
+		if (data[0]['endGame'] === true) {
+			sendAsyncCommand('record=get', tableRecordProcessing);
+		}
+	}
+}
+
+function tableRecordProcessing(data)
+{
+	if (typeof data == 'object') {
+		if (typeof data['name'] != 'undefined') {
+			elemStat = document.getElementById('statistic');
+			cells = elemStat.querySelectorAll('.row');
+			dataTable = [];
+			colNumber = Object.keys(data).length + 1;					// кол-во стобцов (+1 на нумерацию)
+			rowNumber = cells.length / colNumber;						// кол-во строк
+			for (let i = 0; i < cells.length; i++) {			// преобразование данных таблицы в массив
+				c = Math.floor(i / rowNumber);
+				r = i % rowNumber;
+				if (Array.isArray(dataTable[c]) == false) {
+					dataTable[c] = [];
+				}
+				dataTable[c][r] = cells[i].innerHTML;
+			}
+
+			flagNewRecord = false;
+			c1 = Object.keys(data).indexOf('counterHelp');
+			c2 = Object.keys(data).indexOf('time')
+			for (let i = 0; i < rowNumber; i++) {				// нахождение места для новой строки
+				if (
+					dataTable[c1+1][i+1] > data[Object.keys(data)[c1]] ||
+					(
+						dataTable[c1+1][i+1] == data[Object.keys(data)[c1]] &&
+						dataTable[c2+1][i+1] > data[Object.keys(data)[c2]]
+					)
+				) {
+					numNewRecord = i + 1;	// пропуск шапки таблицы
+					flagNewRecord = true;
+					break;
+				}
+			}
+			
+			if (flagNewRecord) {
+				for (let i = 1; i < dataTable.length; i++) {	// вставка новой строки в массив
+					dataTable[i].splice(numNewRecord, 0, data[Object.keys(data)[i-1]]);
+					dataTable[i].pop();
+				}
+				for (let i = 0; i < dataTable.length; i++) {	// вставка новых значений в таблицу
+					for (let j = numNewRecord; j < dataTable[0].length; j++) {
+						cells[i * rowNumber + j].innerHTML = dataTable[i][j];
+					}
+					cells[i * rowNumber + numNewRecord].style = 'background-color: rgba(39, 255, 0, 0.07);';
+				}
+			}
+		}
 	}
 }
 
@@ -101,9 +155,9 @@ function leftClickCell(item)
 	if (item.className == CLASS_NOT_VISIBLE) {
 		cellView = localStorage.getItem(item.id);
 		if (cellView == null || cellView == DEFAULT) {
-			sendCellCommand("coord=test" + item.id, dataFieldProcessing);
+			sendAsyncCommand("coord=test" + item.id, dataFieldProcessing);
 		} else if (cellView == QUESTION) {
-			sendCellCommand("coord=help" + item.id, dataFieldProcessing);
+			sendAsyncCommand("coord=help" + item.id, dataFieldProcessing);
 		}
 	}		
 }
@@ -129,7 +183,7 @@ function rightClickCell(item)
 
 function newGameClick()
 {
-	sendCellCommand("newGame=ok", dataFieldProcessing);
+	sendAsyncCommand("newGame=get", dataFieldProcessing);
 }
 
 function clearImageField()
@@ -237,4 +291,16 @@ function setButtonView(level)
 	numberLevel3.style = 'opacity: 0.8';
 	buttonLevel = document.getElementById('numberLevel' + level);
 	buttonLevel.style = 'opacity: 1';
+}
+
+function insertAfter(newNode, node)
+{
+	parent = node.parentElement;
+	allChildren = parent.children;
+	for (i = 0; allChildren[i] != node && i < allChildren.length; i++);
+	if (i == allChildren.length - 1) {
+		parent.appendChild(newNode);
+	} else {
+		parent.insertBefore(newNode, allChildren[i+1]);
+	}
 }
