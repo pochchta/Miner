@@ -12,7 +12,6 @@ try {
 	$coll = array();
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,7 +59,7 @@ try {
 			?>
 			<button name="setSettings" class="saveSettings button10">Save Settings</button>
 		</form>
-		<div class="statistic">
+		<div class="statistic" id="statistic">
 			<?php RecordWriter::printTable($coll); ?>
 		</div>
 	</div>
