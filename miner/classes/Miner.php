@@ -194,6 +194,8 @@ class Miner
 	}
 	public function getRecord()
 	{
-		return $this->record;
+		$record = $this->record;
+		$this->record = NULL;
+		return $record;
 	}
 }
