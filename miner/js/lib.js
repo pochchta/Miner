@@ -77,6 +77,7 @@ function dataStateProcessing(data)
 
 function tableRecordProcessing(data)
 {
+	const MAX_ROWS = 11;
 	if (typeof data == 'object') {
 		if (typeof data['name'] != 'undefined') {
 			elemStat = document.getElementById('statistic');
@@ -93,24 +94,48 @@ function tableRecordProcessing(data)
 				dataTable[c][r] = cells[i].innerHTML;
 			}
 
-			flagNewRecord = false;
-			c1 = Object.keys(data).indexOf('counterHelp');
-			c2 = Object.keys(data).indexOf('time')
-			for (let i = 0; i < rowNumber; i++) {				// нахождение места для новой строки
-				if (
-					dataTable[c1+1][i+1] > data[Object.keys(data)[c1]] ||
-					(
-						dataTable[c1+1][i+1] == data[Object.keys(data)[c1]] &&
-						dataTable[c2+1][i+1] > data[Object.keys(data)[c2]]
-					)
-				) {
-					numNewRecord = i + 1;	// пропуск шапки таблицы
-					flagNewRecord = true;
-					break;
+			flagUpdateTable = false;		// флаг вставки строки
+			flagInsertInTable = false;		// флаг обновления строки
+			if (rowNumber < MAX_ROWS) {
+				numNewRecord = rowNumber - 1;
+				flagInsertInTable = true;
+			}
+			if (rowNumber == 1) {	// в таблице только шапка
+				numNewRecord = 0;
+			} else {
+				c1 = Object.keys(data).indexOf('counterHelp');
+				c2 = Object.keys(data).indexOf('time')
+				for (let i = 0; i < rowNumber; i++) {				// нахождение места для новой строки
+					if (
+						dataTable[c1+1][i+1] > data[Object.keys(data)[c1]] ||
+						(
+							dataTable[c1+1][i+1] == data[Object.keys(data)[c1]] &&
+							dataTable[c2+1][i+1] > data[Object.keys(data)[c2]]
+						)
+					) {
+						numNewRecord = i;
+						flagUpdateTable = true;
+						break;
+					}
 				}
 			}
-			
-			if (flagNewRecord) {
+
+			if (flagInsertInTable) {				// вставка новой строки
+				for (let i = 0; i < colNumber; i++) {
+					cell = cells[i * rowNumber];
+					newCell = cell.cloneNode(true);
+					if (i > 0) {
+						newCell.innerHTML = data[Object.keys(data)[i-1]];
+					}
+					newCell.style = 'background-color: rgba(39, 255, 0, 0.07);';
+					insertAfter(newCell, cells[i * rowNumber + numNewRecord]);
+				}
+				cellsN = cells[0].parentElement.children;	// клетки столбца номеров
+				for (let i = 1; i < cellsN.length; i++) {
+					cellsN[i].innerHTML = i;
+				}
+			} else if (flagUpdateTable) {		// обновление данных в таблице
+				numNewRecord++;		// пропуск шапки таблицы
 				for (let i = 1; i < dataTable.length; i++) {	// вставка новой строки в массив
 					dataTable[i].splice(numNewRecord, 0, data[Object.keys(data)[i-1]]);
 					dataTable[i].pop();
