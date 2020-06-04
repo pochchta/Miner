@@ -18,6 +18,7 @@ MinerController::loadSettingsFromCookie();
 MinerController::loadMinerFromSession();
 if (isset($_POST['setSettings'])) {
 	MinerController::setSettings($_POST);
+	header("Location: /");
 }
 if ($_POST['newGame'] == 'get') {
 	MinerController::newMiner();
