@@ -118,10 +118,11 @@ class Miner
 			}
 		}
 
-		if ($this->isEndGame() == true) {								// обработка при проигрыше
+		if ($this->isEndGame() == true) {								// обработка в конце игры
 			if ($this->endTime == 0) {
 				$this->endTime = time();
 			}
+			$this->countRemainingBomb = 0;
 			$this->messages[] = self::MESSAGE_END_GAME;
 		}
 	}
