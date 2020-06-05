@@ -26,7 +26,7 @@ body{
 .button10 {
 	display: inline-block;
 	color: black;
-	font-size: 125%;
+	font-size: 20px;
 	font-weight: 700;
 	text-decoration: none;
 	user-select: none;
@@ -166,10 +166,22 @@ body{
 	border-top: 1px solid #A9A9A9;
 	padding-left: 3px;
 	background-color: #fff;
+	font-size: 16px;
 }
 .statistic .row:last-child{
 	border-bottom: 1px solid #A9A9A9;
 }
 .statistic .row:first-child{
 	font-weight: 700;
+}
+.statistic .row:nth-child(2){
+    color: #AF9617;
+    font-size: 21px;
+    font-weight: 700;
+}
+.statistic .row:nth-child(3){
+	font-size: 19px;
+}
+.statistic .row:nth-child(4){
+	font-size: 17px;
 }
