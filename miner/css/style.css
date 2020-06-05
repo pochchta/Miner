@@ -153,6 +153,7 @@ body{
 }
 .statistic .table{
 	display: flex;
+	background-color: #fff;
 }
 .statistic .column{
 	flex-grow: 1;
@@ -165,7 +166,6 @@ body{
 	height: 1.2em;
 	border-top: 1px solid #A9A9A9;
 	padding-left: 3px;
-	background-color: #fff;
 	font-size: 16px;
 }
 .statistic .row:last-child{
