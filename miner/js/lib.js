@@ -46,10 +46,12 @@ function dataStateProcessing(data)
 {
 	if (Array.isArray(data)) {
 		if (startTimeGlob != data[0]['startTime']) {
-			startTimeGlob = data[0]['startTime'];
+			// startTimeGlob = data[0]['startTime'];	// время на сервере может быть не синхронизировано
+			startTimeGlob = new Date().getTime()/1000;
 			setTimer();
 		}
 		if (endTimeGlob != data[0]['endTime']) {
+			startTimeGlob = data[0]['startTime'];
 			endTimeGlob = data[0]['endTime'];
 			setTimer();
 		}		
