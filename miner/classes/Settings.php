@@ -10,7 +10,7 @@ class Settings
 	const MAX_HEIGHT = 16;
 	const MIN_NUMBER_BOMBS = 0;
 	const MAX_NUMBER_BOMBS = 100;
-	const MAX_NAME_LEN = 20;
+	const MAX_NAME_LEN = 15;
 	const LEVEL1 = '10x10x10';	// WxHxB
 	const LEVEL2 = '16x16x40';
 	const LEVEL3 = '30x16x100';
